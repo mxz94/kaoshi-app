@@ -62,13 +62,37 @@ export function ensureIdentity() {
 
 /** 取当前设备身份 key（供请求头使用），确保一定存在 */
 export function getUserKey() {
-  return ensureIdentity().userKey
+  const id = ensureIdentity()
+  // 已微信登录：以 wx:<openid> 作为账号 key，所有数据自动归属微信账号（多端同步）
+  if (id.wxOpenid) return 'wx:' + id.wxOpenid
+  return id.userKey
 }
 
 /** 认领他人/历史数据后覆盖 key（数据已在服务端搬过来，本地跟着换身份） */
 export function setUserKey(key) {
   const id = getIdentity() || {}
   setIdentity({ ...id, userKey: key })
+}
+
+// ===== 微信登录（个人主体：openid 即账号，免注册）=====
+export function getWxOpenid() {
+  const id = getIdentity()
+  return (id && id.wxOpenid) || ''
+}
+
+export function setWxOpenid(openid) {
+  const id = getIdentity() || {}
+  setIdentity({ ...id, wxOpenid: openid || '' })
+}
+
+export function isWechatBound() {
+  return !!getWxOpenid()
+}
+
+/** 退出微信登录（保留本机游客身份，账号数据仍在服务端，重登即恢复） */
+export function clearWxOpenid() {
+  const id = getIdentity() || {}
+  setIdentity({ ...id, wxOpenid: '' })
 }
 
 /** 展示用昵称（未设置返回空串，由页面引导填写） */

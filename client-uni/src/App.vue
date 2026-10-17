@@ -1,13 +1,43 @@
 <script>
-import { ensureIdentity } from './utils/identity.js'
+import { ensureIdentity, getIdentity, setWxOpenid, getWxOpenid } from './utils/identity.js'
+import api from './utils/api.js'
 
 export default {
   onLaunch: function () {
     // 确保本地身份存在（迁移契约：身份读写只走 utils/identity.js）
     ensureIdentity()
+    // 小程序端静默微信登录：openid 即账号，免注册；首次登录自动合并本机游客数据
+    // #ifdef MP-WEIXIN
+    silentWechatLogin()
+    // #endif
   },
   onShow: function () {},
   onHide: function () {},
+}
+
+// 小程序启动即静默登录（wx.login 无需用户授权）；失败则降级游客模式，不影响刷题
+async function silentWechatLogin() {
+  if (getWxOpenid()) return // 已登录，跳过
+  try {
+    const { code } = await new Promise((resolve, reject) =>
+      uni.login({ provider: 'weixin', success: resolve, fail: reject })
+    )
+    if (!code) return
+    const r = await api.wechatLogin(code)
+    if (!r || !r.openid) return
+    // 合并本机游客数据到微信账号（仅首次：身份里还是游客 key 时才搬）
+    const before = getIdentity()
+    if (before && before.userKey && !before.userKey.startsWith('wx:') && before.userKey !== 'anonymous') {
+      try {
+        await api.bind({ fromKey: before.userKey, toKey: 'wx:' + r.openid })
+      } catch (e) {
+        /* 合并失败不阻塞登录 */
+      }
+    }
+    setWxOpenid(r.openid)
+  } catch (e) {
+    /* 静默失败：保持游客模式 */
+  }
 }
 </script>
 

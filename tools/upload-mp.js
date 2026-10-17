@@ -41,6 +41,7 @@ function patchProjectConfig() {
 async function main() {
   const candidates = [
     'miniprogram-ci',
+    path.resolve('D:/clean/_mpci/node_modules/miniprogram-ci'),
     path.resolve(__dirname, '..', 'client-uni', 'node_modules', 'miniprogram-ci'),
     path.resolve(__dirname, '..', '..', '_ci-tmp', 'node_modules', 'miniprogram-ci'),
   ]

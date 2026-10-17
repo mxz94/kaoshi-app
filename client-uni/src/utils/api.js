@@ -80,6 +80,14 @@ export const api = {
   migrateClaim: (code) => request('/api/user/migrate-claim', { method: 'POST', data: { code } }),
   claimLegacy: () => request('/api/user/claim-legacy', { method: 'POST' }),
 
+  // 微信登录（个人主体：openid 即账号，免注册；仅小程序端）
+  wechatLogin: (code) => request('/api/auth/wechat-login', { method: 'POST', data: { code } }),
+  // 首次登录把本机游客数据合并到微信账号
+  bind: (fromKey, toKey) => request('/api/auth/bind', { method: 'POST', data: { fromKey, toKey } }),
+  // 账号资料读写
+  profileGet: () => request('/api/auth/profile'),
+  profileSave: (nickName, avatarUrl) => request('/api/auth/profile', { method: 'POST', data: { nickName, avatarUrl } }),
+
   // 内容安全：昵称/房间号提交前校验（不通过则前端拦截，后端 ingest 二次拦截）
   checkContent: (text, scene = 'nickname') =>
     request('/api/content/check', { method: 'POST', data: { text, scene } }),

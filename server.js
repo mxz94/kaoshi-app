@@ -559,6 +559,109 @@ app.post('/api/content/check', wrap(async (req, res) => {
   res.json(r);
 }));
 
+// ===== 微信登录（个人主体：免 300 认证，仅取 openid）=====
+// 仅小程序端调用（wx.login 拿 code → 服务端 code2Session 换 openid）。
+// openid 作为 user_key 前缀（wx:<openid>），复用既有「按 user_key 隔离」的全部逻辑，
+// 因此微信登录后刷题/错题/收藏/笔记自动归属账号，实现多端云同步。
+const { WX_APPID, WX_APPSECRET } = process.env;
+
+// 把某 user_key 名下的全部练习数据改挂到另一个 key（唯一键冲突的行丢弃，保留目标已有）
+async function reassignUserKey(from, to) {
+  if (!from || !to || from === to) return { records: 0, wrongs: 0, favorites: 0, notes: 0 };
+  if (from === 'anonymous' || from === LEGACY_KEY || to === 'anonymous' || to === LEGACY_KEY) {
+    return { records: 0, wrongs: 0, favorites: 0, notes: 0 };
+  }
+  const pr = await db.prepare('UPDATE IGNORE practice_records SET user_key = ? WHERE user_key = ?').run(to, from);
+  const wq = await db.prepare('UPDATE IGNORE wrong_questions SET user_key = ? WHERE user_key = ?').run(to, from);
+  const fa = await db.prepare('UPDATE IGNORE favorites SET user_key = ? WHERE user_key = ?').run(to, from);
+  const no = await db.prepare('UPDATE IGNORE notes SET user_key = ? WHERE user_key = ?').run(to, from);
+  return { records: pr.changes, wrongs: wq.changes, favorites: fa.changes, notes: no.changes };
+}
+
+// code → openid（服务端调用微信接口，密钥来自环境变量，绝不回传前端）
+async function code2Session(code) {
+  if (!WX_APPID || !WX_APPSECRET) {
+    const e = new Error('服务端未配置微信密钥（WX_APPID / WX_APPSECRET）');
+    e.status = 500;
+    throw e;
+  }
+  const url =
+    `https://api.weixin.qq.com/sns/jscode2session?appid=${encodeURIComponent(WX_APPID)}` +
+    `&secret=${encodeURIComponent(WX_APPSECRET)}&js_code=${encodeURIComponent(code)}&grant_type=authorization_code`;
+  const resp = await fetch(url);
+  const data = await resp.json().catch(() => ({}));
+  if (data.errcode) {
+    const e = new Error('微信登录失败：' + (data.errmsg || 'errcode ' + data.errcode));
+    e.status = 502;
+    throw e;
+  }
+  if (!data.openid) {
+    const e = new Error('微信登录未返回 openid');
+    e.status = 502;
+    throw e;
+  }
+  return { openid: data.openid, unionid: data.unionid || null };
+}
+
+// POST /api/auth/wechat-login —— 小程序端：code 换 openid，落库用户，返回账号信息
+app.post('/api/auth/wechat-login', wrap(async (req, res) => {
+  const { code } = req.body || {};
+  if (!code) return res.status(400).json({ error: '缺少登录 code' });
+  const { openid, unionid } = await code2Session(code);
+
+  const exist = await db.prepare('SELECT id, nick_name, avatar_url FROM users WHERE openid = ?').get(openid);
+  let isNewUser = false;
+  if (exist) {
+    await db.prepare('UPDATE users SET last_login_at = NOW() WHERE id = ?').run(exist.id);
+  } else {
+    isNewUser = true;
+    await db.prepare('INSERT INTO users (openid, unionid, last_login_at) VALUES (?, ?, NOW())').run(openid, unionid);
+  }
+  const row = exist || (await db.prepare('SELECT nick_name, avatar_url FROM users WHERE openid = ?').get(openid));
+  res.json({
+    openid,
+    userKey: 'wx:' + openid,
+    nickName: (row && row.nick_name) || '',
+    avatarUrl: (row && row.avatar_url) || '',
+    isNewUser,
+  });
+}));
+
+// POST /api/auth/bind —— 首次微信登录时，把本机游客数据合并到微信账号（方案②，不丢历史）
+// body: { fromKey, toKey }（toKey 应为 wx:<openid>）
+app.post('/api/auth/bind', wrap(async (req, res) => {
+  const { fromKey, toKey } = req.body || {};
+  const r = await reassignUserKey(String(fromKey || ''), String(toKey || ''));
+  res.json({ ok: true, ...r });
+}));
+
+// GET /api/auth/profile —— 当前微信账号资料（按 user_key 前缀 wx: 识别）
+app.get('/api/auth/profile', wrap(async (req, res) => {
+  const uk = req.userKey;
+  if (!uk.startsWith('wx:')) return res.status(400).json({ error: '当前不是微信登录状态' });
+  const row = await db.prepare('SELECT nick_name, avatar_url, created_at FROM users WHERE openid = ?').get(uk.slice(3));
+  if (!row) return res.status(404).json({ error: '账号不存在' });
+  res.json({ nickName: row.nick_name || '', avatarUrl: row.avatar_url || '', registeredAt: row.created_at });
+}));
+
+// POST /api/auth/profile —— 保存昵称/头像（昵称过内容安全校验）
+app.post('/api/auth/profile', wrap(async (req, res) => {
+  const uk = req.userKey;
+  if (!uk.startsWith('wx:')) return res.status(400).json({ error: '当前不是微信登录状态' });
+  const openid = uk.slice(3);
+  const { nickName, avatarUrl } = req.body || {};
+  const name = (nickName || '').toString().trim().slice(0, 32);
+  if (name) {
+    const r = await checkTextSecurity(name, 'nickname');
+    if (!r.ok) return res.status(400).json({ error: '昵称含不合规内容：' + (r.reason || '') });
+  }
+  const avatar = (avatarUrl || '').toString().trim().slice(0, 512);
+  const exist = await db.prepare('SELECT id FROM users WHERE openid = ?').get(openid);
+  if (!exist) return res.status(404).json({ error: '账号不存在' });
+  await db.prepare('UPDATE users SET nick_name = ?, avatar_url = ? WHERE openid = ?').run(name, avatar, openid);
+  res.json({ ok: true });
+}));
+
 // ===== 模考组卷：按真实考试模块配比，跨题库抽题成卷 =====
 // 预设定义「模块 → 目标题量」。模块名对应 exam_categories 的顶层类别名；
 // 题库只要挂在某模块分类、或该模块下的任意子孙分类，即计入该模块。

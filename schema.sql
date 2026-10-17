@@ -158,3 +158,18 @@ CREATE TABLE IF NOT EXISTS notes (
   INDEX (user_key),
   INDEX (bank_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 微信用户（个人主体：仅 openid，免 300 认证；头像/昵称由用户主动填写）
+-- 前端以 "wx:<openid>" 作为 X-User-Key，复用既有「按 user_key 隔离」的全部逻辑，
+-- 因此微信登录后刷题/错题/收藏/笔记自动归属账号，实现多端云同步。
+CREATE TABLE IF NOT EXISTS users (
+  id            INT PRIMARY KEY AUTO_INCREMENT,
+  openid        VARCHAR(64) NOT NULL,
+  unionid       VARCHAR(64) NULL,
+  nick_name     VARCHAR(64) NULL,
+  avatar_url    VARCHAR(512) NULL,
+  created_at    DATETIME NOT NULL DEFAULT NOW(),
+  last_login_at DATETIME NOT NULL DEFAULT NOW(),
+  UNIQUE KEY uq_openid (openid),
+  INDEX (unionid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
