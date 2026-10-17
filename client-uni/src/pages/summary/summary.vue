@@ -60,7 +60,15 @@ const avgText = computed(() =>
 )
 
 function again() {
-  uni.navigateTo({ url: `/pages/practice/practice?bankId=${round.value.bankId}` })
+  const r = round.value
+  if (r.kind) {
+    let url = `/pages/practice/practice?kind=${encodeURIComponent(r.kind)}`
+    if (r.module) url += `&module=${encodeURIComponent(r.module)}`
+    if (r.limit) url += `&limit=${encodeURIComponent(r.limit)}`
+    uni.navigateTo({ url })
+  } else {
+    uni.navigateTo({ url: `/pages/practice/practice?bankId=${r.bankId}` })
+  }
 }
 function home() {
   uni.switchTab({ url: '/pages/index/index' })

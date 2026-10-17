@@ -377,6 +377,137 @@ app.post('/api/wrong/remove', wrap(async (req, res) => {
   res.json({ ok: true });
 }));
 
+// ===== 智能练习：跨题库抽题成一组，直接进 practice 页（mode=smart）=====
+// GET /api/practice/smart?kind=redo|targeted|daily&module=<名称>&limit=<n>
+//  - redo    : 全部错题（按错题频次降序，优先攻克反复做错的）
+//  - targeted: 指定类别（顶层或子类均可）下的题，limit 默认 20
+//  - daily   : 偏置最弱模块补齐今日目标；limit 默认 20
+// 返回结构与 /api/banks/:id/questions 一致（含每题 bankId，供练习页记录/收藏/笔记）
+async function questionObjs(rows) {
+  return Promise.all(
+    rows.map(async (q) => {
+      const opts = await db
+        .prepare('SELECT label, content, is_correct FROM options WHERE question_id = ? ORDER BY label')
+        .all(q.id);
+      return {
+        id: q.id, bankId: q.bank_id, type: q.type, stem: q.stem, analysis: q.analysis,
+        options: opts.map((o) => ({ label: o.label, content: o.content, isCorrect: !!o.is_correct })),
+      };
+    })
+  );
+}
+
+// 把类别名称解析成「该类别及其全部子孙」的 id 集合（精确匹配名称）
+async function resolveCategoryScope(name) {
+  const catRows = await db.prepare('SELECT id, name, parent_id FROM exam_categories').all();
+  const catMap = new Map(
+    catRows.map((c) => [c.name, { id: Number(c.id), parentId: c.parent_id == null ? null : Number(c.parent_id) }])
+  );
+  const hit = catMap.get(String(name || '').trim());
+  if (!hit) return null;
+  const childrenOf = new Map();
+  for (const c of catRows) {
+    const pid = c.parent_id == null ? null : Number(c.parent_id);
+    if (!childrenOf.has(pid)) childrenOf.set(pid, []);
+    childrenOf.get(pid).push(Number(c.id));
+  }
+  const scope = new Set([hit.id]);
+  const stack = [hit.id];
+  while (stack.length) {
+    const cur = stack.pop();
+    for (const ch of childrenOf.get(cur) || []) {
+      if (!scope.has(ch)) { scope.add(ch); stack.push(ch); }
+    }
+  }
+  return scope;
+}
+
+async function bankIdsInScope(scope) {
+  if (!scope || !scope.size) return [];
+  const ids = [...scope];
+  const ph = ids.map(() => '?').join(',');
+  const rows = await db.prepare(`SELECT id FROM banks WHERE category_id IN (${ph})`).all(...ids);
+  return rows.map((r) => Number(r.id));
+}
+
+// 计算本人最弱模块名（正确率最低且有过练习的），无数据返回 null
+async function weakestModuleName(uk) {
+  const rows = await db
+    .prepare(`SELECT b.categories, COUNT(*) c, COALESCE(SUM(pr.is_correct),0) ok
+              FROM practice_records pr JOIN banks b ON b.id = pr.bank_id
+              WHERE pr.user_key = ? GROUP BY pr.bank_id, b.categories`)
+    .all(uk);
+  const modMap = {};
+  for (const r of rows) {
+    let cats = [];
+    try { cats = JSON.parse(r.categories || '[]'); } catch { /* 忽略脏数据 */ }
+    for (const cat of cats) {
+      if (!modMap[cat]) modMap[cat] = { name: cat, count: 0, ok: 0 };
+      modMap[cat].count += Number(r.c) || 0;
+      modMap[cat].ok += Number(r.ok) || 0;
+    }
+  }
+  const modules = Object.values(modMap).filter((m) => m.count > 0);
+  if (!modules.length) return null;
+  modules.sort((a, b) => (a.ok / a.count) - (b.ok / b.count));
+  return modules[0].name;
+}
+
+app.get('/api/practice/smart', wrap(async (req, res) => {
+  const uk = req.userKey;
+  const kind = String(req.query.kind || 'targeted');
+  const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 20));
+  let rows = [];
+
+  if (kind === 'redo') {
+    // 错题按「做错次数」降序：反复错的优先，攻克效率最高
+    rows = await db
+      .prepare(`SELECT q.id, q.bank_id, q.type, q.stem, q.analysis
+                FROM wrong_questions w JOIN questions q ON q.id = w.question_id
+                WHERE w.user_key = ?
+                ORDER BY (SELECT COUNT(*) FROM practice_records pr
+                          WHERE pr.user_key = w.user_key AND pr.question_id = w.question_id AND pr.is_correct = 0) DESC,
+                         w.created_at DESC`)
+      .all(uk);
+  } else if (kind === 'targeted') {
+    const scope = await resolveCategoryScope(req.query.module);
+    const ids = await bankIdsInScope(scope);
+    if (ids.length) {
+      const ph = ids.map(() => '?').join(',');
+      rows = await db
+        .prepare(`SELECT id, bank_id, type, stem, analysis FROM questions WHERE bank_id IN (${ph}) ORDER BY RAND() LIMIT ?`)
+        .all(...ids, limit);
+    }
+  } else {
+    // daily：偏置最弱模块，不足则随机补足（保证凑够 limit 题）
+    const weak = await weakestModuleName(uk);
+    const scope = weak ? await resolveCategoryScope(weak) : null;
+    const ids = await bankIdsInScope(scope);
+    if (ids.length) {
+      const ph = ids.map(() => '?').join(',');
+      rows = await db
+        .prepare(`SELECT id, bank_id, type, stem, analysis FROM questions WHERE bank_id IN (${ph}) ORDER BY RAND() LIMIT ?`)
+        .all(...ids, limit);
+    }
+    if (rows.length < limit) {
+      const fill = limit - rows.length;
+      const have = new Set(rows.map((r) => Number(r.id)));
+      const extra = await db
+        .prepare('SELECT id, bank_id, type, stem, analysis FROM questions ORDER BY RAND() LIMIT ?')
+        .all(fill);
+      for (const e of extra) if (!have.has(Number(e.id))) rows.push(e);
+    }
+  }
+
+  if (!rows.length) {
+    return res
+      .status(404)
+      .json({ error: '暂无可练习的题目：先去刷点题，或检查题库是否挂到了正确的分类下' });
+  }
+  const result = await questionObjs(rows);
+  res.json(result);
+}));
+
 // ===== 收藏 + 笔记（user_key 隔离，免注册）=====
 // GET /api/favorite/ids?bankId= —— 本人在该题库已收藏的题目 id 列表（练习页初始化星标用）
 app.get('/api/favorite/ids', wrap(async (req, res) => {

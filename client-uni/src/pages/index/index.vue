@@ -47,6 +47,18 @@
       <text class="muted" style="font-size:18px;">›</text>
     </view>
 
+    <!-- 每日一练（偏置弱项，凑满今日目标） -->
+    <view class="card row" style="justify-content:space-between;" @tap="goDaily">
+      <view class="row">
+        <view class="daily-icon">📅</view>
+        <view style="margin-left:12px;">
+          <view style="font-weight:600;">每日一练</view>
+          <view class="muted">{{ dailyText }}</view>
+        </view>
+      </view>
+      <text class="muted" style="font-size:18px;">›</text>
+    </view>
+
     <!-- 我的题库 -->
     <view class="spread" style="margin:8px 16px 10px;">
       <text style="font-weight:600; font-size:16px;">我的题库</text>
@@ -85,6 +97,13 @@ const today = ref({ count: 0, accuracy: 0, streak: 0 })
 const banks = ref([])
 const settings = ref(getSettings())
 const lastBank = ref(null)
+// 每日一练：今日剩余目标题数（偏置最弱模块补齐）
+const dailyRemaining = computed(() => Math.max(0, settings.value.dailyGoal - today.value.count))
+const dailyText = computed(() =>
+  dailyRemaining.value > 0
+    ? `今日还差 ${dailyRemaining.value} 题 · 偏重你的弱项`
+    : `今日目标已达成 🎉 · 再来一组巩固`
+)
 
 const lastBankPct = computed(() =>
   lastBank.value && lastBank.value.total ? Math.round((lastBank.value.done / lastBank.value.total) * 100) : 0
@@ -123,6 +142,10 @@ async function refresh() {
 function continueBank() {
   uni.navigateTo({ url: `/pages/practice/practice?bankId=${lastBank.value.bankId}` })
 }
+function goDaily() {
+  const limit = dailyRemaining.value > 0 ? dailyRemaining.value : settings.value.dailyGoal
+  uni.navigateTo({ url: `/pages/practice/practice?kind=daily&limit=${limit}` })
+}
 function goExam() { uni.navigateTo({ url: '/pages/exam-setup/exam-setup' }) }
 function goAdd() { uni.navigateTo({ url: '/pages/bank-add/bank-add' }) }
 function goDetail(id) { uni.navigateTo({ url: `/pages/bank-detail/bank-detail?id=${id}` }) }
@@ -140,5 +163,9 @@ onShow(refresh)
 .exam-icon {
   width: 36px; height: 36px; border-radius: 10px; background: rgba(217,119,6,0.12);
   color: #d97706; text-align: center; line-height: 36px; font-size: 18px;
+}
+.daily-icon {
+  width: 36px; height: 36px; border-radius: 10px; background: rgba(47,107,255,0.12);
+  color: #2f6bff; text-align: center; line-height: 36px; font-size: 18px;
 }
 </style>

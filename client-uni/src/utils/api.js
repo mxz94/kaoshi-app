@@ -55,6 +55,15 @@ export const api = {
   addQuestion: (bankId, q) => request(`/api/banks/${bankId}/questions`, { method: 'POST', data: q }),
   submitAnswer: (p) => request('/api/practice/answer', { method: 'POST', data: p }),
 
+  // 智能练习：跨题库抽题（错题重练 / 专项 / 每日一练）
+  smartQuestions: (params = {}) => {
+    const qs = [];
+    if (params.kind) qs.push('kind=' + encodeURIComponent(params.kind));
+    if (params.module) qs.push('module=' + encodeURIComponent(params.module));
+    if (params.limit) qs.push('limit=' + encodeURIComponent(String(params.limit)));
+    return request('/api/practice/smart' + (qs.length ? '?' + qs.join('&') : ''));
+  },
+
   // 错题本
   addWrong: (bankId, questionId) => request('/api/wrong', { method: 'POST', data: { bankId, questionId } }),
   removeWrong: (bankId, questionId) => request('/api/wrong/remove', { method: 'POST', data: { bankId, questionId } }),

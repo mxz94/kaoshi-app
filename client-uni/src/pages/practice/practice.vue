@@ -3,8 +3,8 @@
     <!-- 顶栏：进度 + 计时 -->
     <view class="topbar">
       <view style="display:flex; align-items:center; gap:8px;">
-        <text class="muted" style="font-size:13px;">{{ idx + 1 }} / {{ list.length }}</text>
-        <text v-if="modeText" class="mode-badge">{{ modeText }}</text>
+      <text class="muted" style="font-size:13px;">{{ idx + 1 }} / {{ list.length }}</text>
+      <text v-if="badgeText" class="mode-badge">{{ badgeText }}</text>
       </view>
       <text class="timer">⏱ {{ elapsedText }}</text>
     </view>
@@ -105,9 +105,20 @@ const records = ref([])      // 本轮每题结果（总结页数据源，按作
 const answerMap = ref({})    // questionId → 结果（供回看上一题）
 const bankId = ref('')
 const mode = ref('all')                 // all | wrong | unanswered
+const smart = ref(null)                 // 智能练习：{ kind, module, limit } | null
 const modeText = computed(() =>
   mode.value === 'wrong' ? '错题模式' : mode.value === 'unanswered' ? '未做模式' : ''
 )
+// 智能模式徽标（优先于普通 mode 徽标）
+const smartText = computed(() => {
+  if (!smart.value) return ''
+  const k = smart.value.kind
+  if (k === 'redo') return '错题重练'
+  if (k === 'targeted') return smart.value.module ? '专项·' + smart.value.module : '专项练习'
+  if (k === 'daily') return '每日一练'
+  return '智能练习'
+})
+const badgeText = computed(() => (smart.value ? smartText.value : modeText.value))
 const settings = ref(getSettings())
 const startedAt = Date.now()
 const qStartAt = ref(Date.now())
@@ -123,6 +134,8 @@ const noteLoading = ref(false)
 const noteSaving = ref(false)
 
 const q = computed(() => list.value[idx.value] || null)
+// 智能模式下题目自带 bankId；普通模式回退到路由 bankId。所有按题操作统一走这里。
+const curBankId = () => (q.value && q.value.bankId) ? q.value.bankId : bankId.value
 const elapsedText = computed(() => {
   const s = Math.floor((Date.now() - startedAt) / 1000)
   const m = String(Math.floor(s / 60)).padStart(2, '0')
@@ -167,7 +180,7 @@ async function confirm() {
   const duration = Math.min(600, Math.round((Date.now() - qStartAt.value) / 1000))
   try {
     const r = await api.submitAnswer({
-      bankId: bankId.value,
+      bankId: curBankId(),
       questionId: qid,
       selected: selected.value,
       duration,
@@ -193,10 +206,10 @@ async function confirm() {
 
     // 修订后同步错题本：改对则移出，改错则加入
     if (prev) {
-      if (prev.isCorrect && !r.isCorrect) api.addWrong(bankId.value, qid).catch(() => {})
-      if (!prev.isCorrect && r.isCorrect) api.removeWrong(bankId.value, qid).catch(() => {})
+      if (prev.isCorrect && !r.isCorrect) api.addWrong(curBankId(), qid).catch(() => {})
+      if (!prev.isCorrect && r.isCorrect) api.removeWrong(curBankId(), qid).catch(() => {})
     } else if (!r.isCorrect) {
-      api.addWrong(bankId.value, qid).catch(() => {})
+      api.addWrong(curBankId(), qid).catch(() => {})
     }
 
     // 自动下一题：仅答对时生效，答错停留看解析
@@ -235,7 +248,9 @@ function goNext() {
     lastResult.value = null
     selected.value = []
     qStartAt.value = Date.now()
-    uni.setStorageSync('kaoshi_last_bank', { bankId: bankId.value, lastIdx: idx.value })
+    if (!smart.value && bankId.value) {
+      uni.setStorageSync('kaoshi_last_bank', { bankId: bankId.value, lastIdx: idx.value })
+    }
   } else {
     finish()
   }
@@ -244,6 +259,9 @@ function goNext() {
 function finish() {
   const round = {
     bankId: bankId.value,
+    kind: (smart.value && smart.value.kind) || '',
+    module: (smart.value && smart.value.module) || '',
+    limit: (smart.value && smart.value.limit) || '',
     total: records.value.length,
     correct: records.value.filter((r) => r.isCorrect).length,
     totalSec: Math.round((Date.now() - startedAt) / 1000),
@@ -262,7 +280,7 @@ async function toggleFav() {
   const next = !favSet.value[qid]
   favSet.value[qid] = next
   try {
-    await api.favoriteToggle(bankId.value, qid)
+    await api.favoriteToggle(curBankId(), qid)
   } catch (e) {
     favSet.value[qid] = !next // 回滚
     uni.showToast({ title: '操作失败：' + e.message, icon: 'none' })
@@ -276,7 +294,7 @@ async function openNote() {
   noteLoading.value = true
   noteText.value = ''
   try {
-    const r = await api.noteGet(bankId.value, q.value.id)
+    const r = await api.noteGet(curBankId(), q.value.id)
     noteText.value = r.content || ''
   } catch (e) {
     noteText.value = ''
@@ -292,7 +310,7 @@ async function saveNote() {
   if (!q.value || noteSaving.value) return
   noteSaving.value = true
   try {
-    await api.noteSave(bankId.value, q.value.id, noteText.value)
+    await api.noteSave(curBankId(), q.value.id, noteText.value)
     noteSet.value[q.value.id] = noteText.value.trim().length > 0
     uni.showToast({ title: '已保存', icon: 'success' })
     noteOpen.value = false
@@ -306,29 +324,52 @@ async function saveNote() {
 onLoad(async (query) => {
   bankId.value = query.bankId || ''
   mode.value = query.mode || 'all'
+  if (query.kind) {
+    smart.value = {
+      kind: query.kind,
+      module: query.module || '',
+      limit: query.limit ? Number(query.limit) : '',
+    }
+  }
   try {
-    let qs = await api.bankQuestions(bankId.value, { mode: mode.value })
-    if (settings.value.shuffleQuestions) qs = shuffle(qs)
+    let qs
+    if (smart.value) {
+      qs = await api.smartQuestions({
+        kind: smart.value.kind,
+        module: smart.value.module,
+        limit: smart.value.limit || undefined,
+      })
+    } else {
+      qs = await api.bankQuestions(bankId.value, { mode: mode.value })
+    }
+    // 错题重练保持「反复错优先」顺序，不打乱；其余智能组已随机，普通组按设置
+    if (settings.value.shuffleQuestions && smart.value?.kind !== 'redo') qs = shuffle(qs)
     const startCfg = uni.getStorageSync('kaoshi_practice_start')
     const from = startCfg && String(startCfg.bankId) === String(bankId.value) ? startCfg.from || 0 : 0
     list.value = qs
     idx.value = Math.min(from, Math.max(0, qs.length - 1))
     qStartAt.value = Date.now()
-    // 初始化收藏 / 笔记标记（一次拉全题库，避免逐题请求）
-    try {
-      const [fids, nids] = await Promise.all([
-        api.favoriteIds(bankId.value).catch(() => []),
-        api.noteIds(bankId.value).catch(() => []),
-      ])
-      const fm = {}
-      fids.forEach((id) => (fm[id] = true))
-      favSet.value = fm
-      const nm = {}
-      nids.forEach((id) => (nm[id] = true))
-      noteSet.value = nm
-    } catch { /* 标记失败不阻塞刷题 */ }
+    // 初始化收藏 / 笔记标记（一次拉全题库，避免逐题请求）；智能模式跨题库，跳过
+    if (!smart.value) {
+      try {
+        const [fids, nids] = await Promise.all([
+          api.favoriteIds(curBankId()).catch(() => []),
+          api.noteIds(curBankId()).catch(() => []),
+        ])
+        const fm = {}
+        fids.forEach((id) => (fm[id] = true))
+        favSet.value = fm
+        const nm = {}
+        nids.forEach((id) => (nm[id] = true))
+        noteSet.value = nm
+      } catch { /* 标记失败不阻塞刷题 */ }
+    }
     if (!qs.length) {
-      const tip = mode.value === 'wrong' ? '这个题库还没有你的错题' : mode.value === 'unanswered' ? '题目都做过了' : '这套题还没有题目'
+      let tip
+      if (smart.value && smart.value.kind === 'redo') tip = '错题本是空的'
+      else if (mode.value === 'wrong') tip = '这个题库还没有你的错题'
+      else if (mode.value === 'unanswered') tip = '题目都做过了'
+      else tip = '这套题还没有题目'
       uni.showToast({ title: tip, icon: 'none' })
       setTimeout(() => uni.navigateBack(), 1000)
     }

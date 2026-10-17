@@ -46,7 +46,8 @@
         <text class="gold" style="font-size:14px;">💡</text>
         <text style="font-weight:600;">本周建议</text>
       </view>
-      <view style="font-size:14px; line-height:1.6;">{{ advice }}</view>
+      <view style="font-size:14px; line-height:1.6; margin-bottom:12px;">{{ advice }}</view>
+      <view v-if="worstModule" class="btn-primary" style="height:40px; line-height:40px;" @tap="goWeak">去练弱项 →</view>
     </view>
 
     <!-- 最近 7 天练习 -->
@@ -130,6 +131,13 @@ const advice = computed(() => {
   return `各模块差距不大（最弱 ${worst.name} ${worst.accuracy}%），保持节奏、按考试比重分配练习量即可。`
 })
 
+// 最弱模块名（供「去练弱项」跳转；无数据返回 null）
+const worstModule = computed(() => {
+  const ms = ov.value.modules
+  if (!ms.length) return null
+  return [...ms].sort((a, b) => a.accuracy - b.accuracy)[0].name
+})
+
 async function refresh() {
   try {
     ov.value = await api.overview(period.value)
@@ -143,6 +151,11 @@ function switchPeriod(p) {
   refresh()
 }
 function goWrong() { uni.navigateTo({ url: '/pages/wrong/wrong' }) }
+function goWeak() {
+  if (worstModule.value) {
+    uni.navigateTo({ url: `/pages/practice/practice?kind=targeted&module=${encodeURIComponent(worstModule.value)}` })
+  }
+}
 
 onShow(refresh)
 </script>
