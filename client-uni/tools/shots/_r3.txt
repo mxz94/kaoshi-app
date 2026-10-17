@@ -1,0 +1,2 @@
+跳转后首行=用户协议 | 含服务内容=True
+URL=http://localhost:5180/#/pages/agreement/agreement?type=terms

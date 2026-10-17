@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>登录 · 行测刷题</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* 登录页沿用设计稿：蓝渐变品牌区 + 白底表单，无底部 Tab */
+    #phone.login { background: #fff; }
+    .lg-hero {
+      flex: 0 0 auto; height: 300px; padding: 0 24px;
+      display: flex; flex-direction: column; align-items: center;
+      background: linear-gradient(180deg, #2F6BFF 0%, #2347B0 100%);
+      color: #fff;
+    }
+    .lg-status {
+      height: 62px; width: 100%; display: flex; align-items: center; justify-content: space-between;
+      font-family: var(--num); font-weight: 600; font-size: 14px;
+    }
+    .lg-status .battery { border-color: #fff; }
+    .lg-status .battery i, .lg-status .battery::after { background: #fff; }
+    .lg-brand { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+    .lg-logo {
+      width: 64px; height: 64px; border-radius: 16px; background: #4F86FF;
+      display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700;
+    }
+    .lg-app { font-size: 22px; font-weight: 700; }
+    .lg-slogan { font-size: 13px; opacity: .85; }
+    .lg-body { flex: 1; padding: 32px 24px 40px; display: flex; flex-direction: column; gap: 20px; }
+    .lg-title { font-size: 22px; font-weight: 700; }
+    .lg-desc { font-size: 13px; color: var(--text2); margin-top: -8px; }
+    .lg-input {
+      height: 52px; border: 1px solid var(--border); border-radius: 10px;
+      display: flex; align-items: center; padding: 0 14px; gap: 8px;
+    }
+    .lg-input input {
+      border: none; outline: none; flex: 1; height: 100%; background: transparent;
+      font-size: 15px; font-family: var(--font); color: var(--text);
+    }
+    .lg-input input::placeholder { color: var(--text3); }
+    .lg-row { display: flex; align-items: center; justify-content: space-between; height: 24px; }
+    .lg-check { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; user-select: none; }
+    .lg-check input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .lg-box {
+      width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; line-height: 1;
+    }
+    .lg-check input:checked + .lg-box { background: var(--primary); border-color: var(--primary); }
+    .lg-link { font-size: 13px; color: var(--primary); cursor: pointer; }
+    .lg-btn {
+      height: 50px; border: none; border-radius: 10px; background: var(--primary); color: #fff;
+      font-size: 16px; font-weight: 600; font-family: var(--font); cursor: pointer;
+    }
+    .lg-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .lg-divider { display: flex; align-items: center; gap: 12px; height: 20px; color: var(--text3); font-size: 12px; }
+    .lg-divider::before, .lg-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .lg-ghost {
+      height: 46px; border: 1px solid var(--primary); border-radius: 10px; background: #fff;
+      color: var(--primary); font-size: 14px; font-weight: 600; font-family: var(--font); cursor: pointer;
+    }
+    .lg-foot { font-size: 11px; color: var(--text3); text-align: center; }
+    #lg-toast {
+      position: absolute; left: 50%; bottom: 110px; transform: translateX(-50%) translateY(10px);
+      background: rgba(26, 29, 38, .92); color: #fff; font-size: 13px; padding: 10px 16px;
+      border-radius: 10px; opacity: 0; pointer-events: none; transition: all .25s; white-space: nowrap;
+    }
+    #lg-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div id="phone" class="login">
+    <div class="lg-hero">
+      <div class="lg-status"><span>9:41</span><span class="battery"><i></i></span></div>
+      <div class="lg-brand">
+        <div class="lg-logo">刷</div>
+        <div class="lg-app">行测刷题</div>
+        <div class="lg-slogan">登录以记录你的成绩与战绩</div>
+      </div>
+    </div>
+    <div class="lg-body">
+      <div class="lg-title">登录</div>
+      <div class="lg-desc">输入昵称，进入刷题与竞技场</div>
+      <div class="lg-input"><input id="nickname" maxlength="16" placeholder="你的昵称" autocomplete="off" /></div>
+      <div class="lg-row">
+        <label class="lg-check"><input type="checkbox" id="remember" checked /><span class="lg-box">✓</span>记住我</label>
+        <span class="lg-link" id="switch">切换账号</span>
+      </div>
+      <button class="lg-btn" id="enter" disabled>进入</button>
+      <div class="lg-divider">或</div>
+      <button class="lg-ghost" id="toArena">前往竞技场</button>
+      <div class="lg-foot">昵称用于竞技场身份与战绩记录，无需密码</div>
+    </div>
+    <div id="lg-toast"></div>
+  </div>
+  <script>
+    const KEY = 'kaoshi_identity';
+    function getIdentity() {
+      try { return JSON.parse(localStorage.getItem(KEY) || sessionStorage.getItem(KEY) || 'null'); }
+      catch (e) { return null; }
+    }
+    function setIdentity(id) {
+      const raw = JSON.stringify(id);
+      sessionStorage.setItem(KEY, raw);
+      if (id.remember) localStorage.setItem(KEY, raw); else localStorage.removeItem(KEY);
+    }
+    function uid() {
+      return (window.crypto && crypto.randomUUID && crypto.randomUUID())
+        || 'u-' + Date.now().toString(36) + '-' + Math.random().toString(16).slice(2, 8);
+    }
+    function toast(msg) {
+      const t = document.getElementById('lg-toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1600);
+    }
+
+    const nick = document.getElementById('nickname');
+    const enter = document.getElementById('enter');
+    const remember = document.getElementById('remember');
+
+    // 已有身份 → 回填昵称（记住我 = 长期；否则仅本次会话）
+    const existing = getIdentity();
+    if (existing && existing.nickname) nick.value = existing.nickname;
+    sync();
+
+    nick.addEventListener('input', sync);
+    nick.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !enter.disabled) go(); });
+    enter.addEventListener('click', go);
+    document.getElementById('toArena').addEventListener('click', () => { if (save()) location.href = 'arena-history.html'; });
+    document.getElementById('switch').addEventListener('click', () => {
+      localStorage.removeItem(KEY); sessionStorage.removeItem(KEY);
+      nick.value = ''; sync(); nick.focus(); toast('已清除本机身份，输入新昵称即可');
+    });
+
+    function sync() { enter.disabled = nick.value.trim().length === 0; }
+    function save() {
+      const name = nick.value.trim();
+      if (!name) { toast('请输入昵称'); return false; }
+      const cur = getIdentity();
+      setIdentity({
+        id: (cur && cur.id) || uid(),   // 昵称变了也复用同一 id，保证战绩不断档
+        nickname: name,
+        remember: remember.checked,
+        ts: Date.now(),
+      });
+      return true;
+    }
+    function go() { if (save()) location.href = 'index.html'; }
+  </script>
+</body>
+</html>

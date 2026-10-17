@@ -1,0 +1,8 @@
+page          inj  disabled computed color       backgroundColor    bgImg  opacity pixelBg          pixelFg(99.5%)   CR     PASS
+import        False True     rgb(255, 255, 255)   rgb(22, 32, 58)    no     0.5     (17, 25, 45)     (133, 137, 144)  4.98   OK
+bank-add      False True     rgb(255, 255, 255)   rgb(22, 32, 58)    no     0.5     (22, 31, 51)     (139, 143, 149)  5.06   OK
+exam-setup    False True     rgb(255, 255, 255)   rgb(22, 32, 58)    no     0.5     (17, 25, 45)     (133, 137, 144)  4.98   OK
+login         False True     rgb(255, 255, 255)   rgb(22, 32, 58)    no     0.5     (22, 31, 51)     (139, 143, 149)  5.06   OK
+migrate       False True     rgb(255, 255, 255)   rgb(22, 32, 58)    no     0.5     (22, 31, 51)     (139, 143, 149)  5.06   OK
+practice      True True     rgb(255, 255, 255)   rgb(22, 32, 58)    no     0.5     (17, 25, 45)     (133, 137, 144)  4.98   OK
+question-add  False True     rgb(255, 255, 255)   rgb(22, 32, 58)    no     0.5     (17, 25, 45)     (133, 137, 144)  4.98   OK

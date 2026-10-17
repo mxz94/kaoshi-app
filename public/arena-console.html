@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="W1sDlCxDJtrgWv0wbAftbW">
+<head data-page-node-id="7vW6izMGxbjNKVKsKYBeKz">
+<meta charset="UTF-8" data-page-node-id="zRRYZejn8PfQZEY4cQaDZJ" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="FKXzkft9SHtNelIAlBw9Si" />
+<title>竞技场 · 主播控制台</title>
+<style>
+  :root{
+    --gold:#F59E0B; --gold-d:#B45309; --blue:#2F6BFF; --ok:#16A34A; --err:#EF4444;
+    --bg:#0F1115; --card:#1A1D24; --line:#2A2F3A; --txt:#E8EAED; --sub:#9AA3B2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Noto Sans SC",system-ui,sans-serif;background:var(--bg);color:var(--txt);padding:20px}
+  h1{font-size:18px;margin:0 0 14px;color:var(--gold)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+  .card h2{font-size:13px;color:var(--sub);margin:0 0 10px;font-weight:600;letter-spacing:.5px}
+  label{font-size:12px;color:var(--sub);display:block;margin:8px 0 4px}
+  input,select{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#11141A;color:var(--txt);font-size:14px}
+  .row{display:flex;gap:10px}
+  .row>*{flex:1}
+  .cfg{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-top:6px}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--txt);background:#11141A;border:1px solid var(--line);border-radius:8px;padding:7px 9px;cursor:pointer}
+  .chk input{width:auto;accent-color:var(--gold)}
+  .selrow{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+  button{margin-top:12px;width:100%;padding:10px;border:0;border-radius:10px;background:var(--gold);color:#1a1205;font-size:14px;font-weight:700;cursor:pointer}
+  button.ghost{background:#222733;color:var(--txt);border:1px solid var(--line)}
+  button:active{transform:translateY(1px)}
+  .q{font-size:15px;line-height:1.5;margin-bottom:10px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .opt{background:#11141A;border:1px solid var(--line);border-radius:8px;padding:8px;font-size:13px}
+  .opt b{color:var(--gold)}
+  .meta{font-size:12px;color:var(--sub);margin-top:8px}
+  .dist{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .dist span{background:#11141A;border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:12px}
+  .lb{list-style:none;padding:0;margin:0}
+  .lb li{display:flex;justify-content:space-between;padding:7px 10px;border-bottom:1px solid var(--line);font-size:14px}
+  .lb li .rk{color:var(--gold);font-weight:700;width:26px}
+  .lb li .sc{color:var(--ok);font-weight:700}
+  .bar{height:8px;background:#11141A;border-radius:5px;overflow:hidden;margin-top:8px}
+  .bar>i{display:block;height:100%;background:var(--gold);width:0%}
+  .tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;background:#222733;color:var(--sub)}
+  .log{font-size:12px;color:var(--sub);max-height:120px;overflow:auto;margin-top:8px}
+  .correct{color:var(--ok)} .wrong{color:var(--err)}
+  .cfgjson{font-size:11px;color:var(--sub);margin-top:10px;white-space:pre-wrap;word-break:break-all;background:#11141A;border:1px solid var(--line);border-radius:8px;padding:8px}
+</style>
+</head>
+<body data-page-node-id="VBFlUu8jFDNPv9QuMvBiMA">
+  <h1 data-page-node-id="eBJ9ToEggPMjXEChWtGniC">🏆 竞技场 · 主播控制台</h1>
+
+  <div class="card" data-page-node-id="7CSHPkFWVXZOGrLyNoQ4OM">
+    <div class="row" data-page-node-id="Ry8v2RK5uebijsNuFzFwKw">
+      <div data-page-node-id="UNlzUabynKCCtHU07iL3jq"><label data-page-node-id="aY4oBEAKRtLq0WwNrR53nD">房间号 roomId</label><input id="roomId" value="default" data-page-node-id="SJtKc61zYV5xzE9ry5wBBm"></div>
+      <div data-page-node-id="8Ro0I5CLY03EKdYblFX1Sk"><label data-page-node-id="KcPtxJHIx7B4NiG4sXFV7j">题库 bankId（留空随机抽）</label><input id="bankId" placeholder="例如 1" data-page-node-id="aK7Oc76tcPq2LeZqusK54j"></div>
+    </div>
+    <label style="margin-top:10px" data-page-node-id="E1ntqm8eUxsLUgfOUua8kZ">对局配置</label>
+    <div class="cfg" data-page-node-id="rGvWvDqF6cNyfXtecjcFVB">
+      <label class="chk" data-page-node-id="Atr2lcYG0DnaUEre2EI4rK"><input type="checkbox" id="c_showOthers" data-page-node-id="pCLv90vsPQBfAYP7OrTZfb"> 观众可见他人答案</label>
+      <label class="chk" data-page-node-id="fiF6OoiyzYLUuP2vA7GFZR"><input type="checkbox" id="c_shuffle" data-page-node-id="a1pkLJ1YwxkmIuB53i6Xvo"> 选项乱序（防记位）</label>
+      <label class="chk" data-page-node-id="9ceCZTmqHaHEUIDOeZeUiR"><input type="checkbox" id="c_allowDigit" checked data-page-node-id="6bvbIf53eJocUDgIcyu4RD"> 数字 1-4 作答</label>
+      <label class="chk" data-page-node-id="yQIdbDHK65jtySAMrYe2Bs"><input type="checkbox" id="c_speed" checked data-page-node-id="AwmsFfI3ZkGez4aG68XXjC"> 速度加权计分</label>
+      <label class="chk" data-page-node-id="xssTFMUe22ad5lM2yidahu"><input type="checkbox" id="c_wrong" data-page-node-id="tJYpuH7XkcBF7aJSal3fvT"> 答错扣分</label>
+      <label class="chk" data-page-node-id="tJVcbj1TcWV5BcqIVQ1nEj"><input type="checkbox" id="c_hideRank" data-page-node-id="cA1qZJyDFdlLXbfOXQmYCY"> 答题中隐藏榜</label>
+      <label class="chk" data-page-node-id="PCJqpup0AUAEhnLJr4kVCj"><input type="checkbox" id="c_auto" data-page-node-id="CTbKnwLWzqAW9CW3orsSad"> 自动连题</label>
+      <label class="chk" style="visibility:hidden" data-page-node-id="ES8YfvbveBYPT5Csgz9hJS">占位</label>
+    </div>
+    <div class="selrow" style="margin-top:10px" data-page-node-id="d8XpL2r1dWcoBTzBfbLHjk">
+      <div data-page-node-id="gLnubAk3nN4EpHHmZAb2dR">
+        <label data-page-node-id="4aYtxNuBsepMOaCqwHXumF">正确答案揭示</label>
+        <select id="c_reveal" data-page-node-id="mkHtHGRUrjH1nJJLAxtfNX"><option value="roundEnd" data-page-node-id="JYlNbEsO6EIEAbnDVPjcU2">回合结束揭示</option><option value="never" data-page-node-id="c5ebpfXYISVpXNyQVtrVxf">永不揭示</option></select>
+      </div>
+      <div data-page-node-id="kujxYi22inQ7OcMUVVNoQ7">
+        <label data-page-node-id="A2zbosxuefGVDFq3EJs9zh">抽题顺序</label>
+        <select id="c_order" data-page-node-id="MHWntWbPvRDZEzSb9VmG57"><option value="random" data-page-node-id="gwRNBLAzbnoDzy4cECm55D">随机</option><option value="sequential" data-page-node-id="n6dK2jsFd3FKN6OMSF9JaU">顺序</option></select>
+      </div>
+      <div data-page-node-id="9ep0qDMP0YGllz1bX1KDBw">
+        <label data-page-node-id="6FOZYMTME4FfHqZo7ORX8t">答错扣分分值</label>
+        <input id="c_wrongScore" type="number" value="30" min="0" max="200" data-page-node-id="WjZBgBf71mhyQVYg15D2kU">
+      </div>
+      <div data-page-node-id="nW5bopHtEm2yo9AdzFr5wR">
+        <label data-page-node-id="CIUOFl8WTc1b6hNwYHcoNU">连题间隔(秒)</label>
+        <input id="c_gap" type="number" value="4" min="1" max="30" data-page-node-id="YmZzU6UF8GNFl2V0uv4BNc">
+      </div>
+      <div data-page-node-id="S5Z9cdUXzDupu2u4pm7eoQ">
+        <label data-page-node-id="P1MwxhfiIeFflXtYn8VmW5">总回合数(0=不限)</label>
+        <input id="c_rounds" type="number" value="0" min="0" max="50" data-page-node-id="HJnlvAarMymo5UqF0CXvaV">
+      </div>
+      <div data-page-node-id="9ajxXSRmnm5HKNUWPFDdF0">
+        <label data-page-node-id="ZxZOjKpnwWFRlEcduAPaSn">答题时长(秒)</label>
+        <input id="duration" type="number" value="15" min="3" max="120" data-page-node-id="pbpdAhbDlaMHi0apBOtvyC">
+      </div>
+    </div>
+    <button id="btnStart" data-page-node-id="gHcXrm7yyUhRnKwUHgN8mu">开始对局</button>
+    <button class="ghost" id="btnEnd" data-page-node-id="QRtJyWqFTPlgFpsJ9QRuHG">结束对局</button>
+  </div>
+
+  <div class="card" data-page-node-id="7ZdqCdXHApO0mbqNsVRNAf">
+    <button id="btnPush" style="margin-top:0" data-page-node-id="1B5b7swbmLucatQKw6SiAm">推送下一题（按配置抽题）</button>
+    <div id="curBox" style="margin-top:12px" data-page-node-id="ovKLLSxakr4syjsnUYzGoi"></div>
+  </div>
+
+  <div class="card" data-page-node-id="zayEp2wAbdCCtwsx9rNcqV">
+    <span class="tag" id="status" data-page-node-id="GUz2XrFxnDoswww4OBrX0G">未开始</span>
+    <div class="cfgjson" id="cfgView" data-page-node-id="7lKEnb3gI4ztYeNtHGhlT2"></div>
+    <ul class="lb" id="leaderboard" style="margin-top:10px" data-page-node-id="zxG1v3osxjBtamJmJRGdXa"></ul>
+  </div>
+
+  <div class="log" id="log" data-page-node-id="tpheaTieoc5KwWVQg4skfD"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const api = (p, body) => fetch('/api/arena'+p, {method: body?'POST':'GET', headers:{'Content-Type':'application/json'}, body: body?JSON.stringify(body):undefined}).then(r=>r.json());
+function log(m){ const el=$('log'); el.prepend(document.createTextNode(m+'\n')); }
+function rid(){ return $('roomId').value.trim() || 'default'; }
+function num(v, d){ const n=Number(v); return isNaN(n)?d:n; }
+
+function collectConfig(){
+  const rounds = num($('c_rounds').value, 0);
+  return {
+    showOthersAnswers: $('c_showOthers').checked,
+    shuffleOptions: $('c_shuffle').checked,
+    allowDigit: $('c_allowDigit').checked,
+    speedBonus: $('c_speed').checked,
+    wrongPenalty: $('c_wrong').checked,
+    wrongPenaltyScore: num($('c_wrongScore').value, 30),
+    hideRankDuringPlay: $('c_hideRank').checked,
+    revealCorrect: $('c_reveal').value,
+    questionOrder: $('c_order').value,
+    autoContinue: $('c_auto').checked,
+    gapSec: num($('c_gap').value, 4),
+    roundsTotal: rounds > 0 ? rounds : null,
+    durationSec: num($('duration').value, 15),
+  };
+}
+
+async function refresh(){
+  const st = await api('/state?roomId='+encodeURIComponent(rid())+'&viewer=host'); // 主播视角：始终可见答案分布
+  $('status').textContent = st.active ? ('第 '+st.roundNo+' 题 · 在线 '+st.participants+' 人 · 已答 '+st.answeredCount+' 人') : '等待推题';
+  if(st.config) $('cfgView').textContent = '当前配置：'+JSON.stringify(st.config, null, 0);
+  // 当前题 + 倒计时
+  const cb = $('curBox');
+  if(st.question){
+    const remain = Math.max(0, st.question.endsAt - st.now);
+    const pct = Math.round(100 * remain / (st.question.durationSec*1000));
+    let html = `<div class="q">${st.question.stem}</div>`+
+      `<div class="opts">`+st.question.options.map(o=>`<div class="opt"><b>${o.label}</b> ${o.content}</div>`).join('')+`</div>`+
+      `<div class="bar"><i style="width:${pct}%"></i></div><div class="meta">剩余 ${Math.ceil(remain/1000)}s</div>`;
+    if(st.answerDist){
+      html += `<div class="dist">${Object.entries(st.answerDist).map(([k,v])=>`<span><b style="color:var(--gold)">${k}</b>: ${v} 票</span>`).join('')}</div>`;
+    }
+    if(st.reveal){
+      html += `<div class="meta correct">正确答案：${st.reveal.correctLabels.join(',')}</div>`;
+    }
+    cb.innerHTML = html;
+  } else { cb.innerHTML=''; }
+  // 榜单
+  $('leaderboard').innerHTML = (st.leaderboard||[]).map(p=>`<li><span class="rk">${p.rank}</span><span>${p.username} <span class="meta">✓${p.correctCount}</span></span><span class="sc">${p.score}</span></li>`).join('') || '<li style="color:var(--sub)">暂无参与</li>';
+}
+
+$('btnStart').onclick = async () => {
+  const r = await api('/session/start', { roomId: rid(), bankId: $('bankId').value? Number($('bankId').value):null, config: collectConfig() });
+  log('开始对局: '+JSON.stringify(r.config||r)); refresh();
+};
+$('btnPush').onclick = async () => {
+  const r = await api('/question/push', { roomId: rid() });
+  log('推题: '+(r.error? JSON.stringify(r): '第'+r.roundNo+'题 OK')); refresh();
+};
+$('btnEnd').onclick = async () => {
+  const r = await api('/session/end', { roomId: rid() });
+  log('结束: '+JSON.stringify(r.standings||r)); refresh();
+};
+setInterval(refresh, 1000); refresh();
+</script>
+</body>
+</html>

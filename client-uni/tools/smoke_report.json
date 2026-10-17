@@ -1,0 +1,116 @@
+[
+  {
+    "页面": "首页",
+    "状态": "有报错",
+    "文本长度": 258,
+    "错误": [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\首页.png"
+  },
+  {
+    "页面": "登录",
+    "状态": "OK",
+    "文本长度": 70,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\登录.png"
+  },
+  {
+    "页面": "刷题(题库列表)",
+    "状态": "OK",
+    "文本长度": 149,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\刷题(题库列表).png"
+  },
+  {
+    "页面": "统计",
+    "状态": "OK",
+    "文本长度": 171,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\统计.png"
+  },
+  {
+    "页面": "我的",
+    "状态": "OK",
+    "文本长度": 92,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\我的.png"
+  },
+  {
+    "页面": "错题本",
+    "状态": "OK",
+    "文本长度": 33,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\错题本.png"
+  },
+  {
+    "页面": "设置",
+    "状态": "OK",
+    "文本长度": 72,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\设置.png"
+  },
+  {
+    "页面": "添加题库",
+    "状态": "OK",
+    "文本长度": 110,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\添加题库.png"
+  },
+  {
+    "页面": "竞技场",
+    "状态": "OK",
+    "文本长度": 66,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\竞技场.png"
+  },
+  {
+    "页面": "模考设置",
+    "状态": "OK",
+    "文本长度": 107,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\模考设置.png"
+  },
+  {
+    "页面": "题库详情",
+    "状态": "OK",
+    "文本长度": 76,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\题库详情.png"
+  },
+  {
+    "页面": "答题页",
+    "状态": "OK",
+    "文本长度": 54,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\答题页.png"
+  },
+  {
+    "页面": "手动录入",
+    "状态": "OK",
+    "文本长度": 144,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\手动录入.png"
+  },
+  {
+    "页面": "练习总结",
+    "状态": "OK",
+    "文本长度": 48,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\练习总结.png"
+  },
+  {
+    "页面": "模考进行中",
+    "状态": "OK",
+    "文本长度": 54,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\模考进行中.png"
+  },
+  {
+    "页面": "模考报告",
+    "状态": "白屏/无内容",
+    "文本长度": 4,
+    "错误": [],
+    "截图": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\shots\\模考报告.png"
+  }
+]

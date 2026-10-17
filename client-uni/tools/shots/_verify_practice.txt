@@ -1,0 +1,10 @@
+设置写入: {"dailyGoal":50,"shuffleQuestions":false,"autoNextQuestion":true}
+正确选项: ['C']
+初始进度: 1 / 3
+⏱ 00:00
+答对后进度: 2 / 3
+⏱ 00:00  (自动跳=True)
+上一题后进度: 1 / 3
+⏱ 00:00 | 可修改(有确认按钮)=True
+改答案后含「已修改」: True
+pageerror: 无

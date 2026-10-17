@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>竞技场 · 战绩榜</title>
+<style>
+  :root{
+    --blue:#2F6BFF; --gold:#F59E0B; --ok:#16A34A; --red:#EF4444;
+    --bg:#F4F5F7; --card:#FFFFFF; --line:#EAECEF; --txt:#1B1F24; --sub:#8A9099;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:#E9EBEF;font-family:"Noto Sans SC",system-ui,sans-serif;color:var(--txt)}
+  /* 手机外框 */
+  #phone{width:390px;max-width:100%;margin:0 auto;min-height:100vh;background:var(--bg);
+    display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.12)}
+  header{background:linear-gradient(135deg,#2F6BFF,#1E4FD0);color:#fff;padding:54px 20px 18px}
+  header .t{font-size:22px;font-weight:800;letter-spacing:1px}
+  header .s{font-size:12px;opacity:.8;margin-top:4px}
+  .seg{display:flex;gap:8px;padding:14px 16px 6px}
+  .seg button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--sub);
+    font-size:14px;font-weight:600;padding:9px 0;border-radius:10px;cursor:pointer}
+  .seg button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  #list{flex:1;overflow:auto;padding:10px 16px 28px}
+  .empty{text-align:center;color:var(--sub);font-size:14px;padding:48px 0}
+  /* 玩家行 */
+  .pl{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:12px 14px;margin-bottom:10px}
+  .pl .rk{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;background:#EEF1F6;color:var(--sub);flex:none}
+  .pl .rk.r1{background:var(--gold);color:#fff}
+  .pl .rk.r2{background:#C7CDD6;color:#fff}
+  .pl .rk.r3{background:#E0A06A;color:#fff}
+  .pl .nm{flex:1;font-size:15px;font-weight:600}
+  .pl .sc{text-align:right}
+  .pl .sc b{font-size:20px;color:var(--blue);font-variant-numeric:tabular-nums}
+  .pl .sc span{display:block;font-size:11px;color:var(--sub);margin-top:2px}
+  .pl .win{color:var(--ok);font-weight:600}
+  /* 对局卡 */
+  .mt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+  .mt .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .mt .when{font-size:12px;color:var(--sub)}
+  .mt .tag{font-size:12px;color:var(--blue);background:#EAF0FF;padding:2px 8px;border-radius:8px}
+  .mt .top3{font-size:13px;line-height:1.7}
+  .mt .top3 .o{color:var(--gold);font-weight:700;margin-right:4px}
+  .mt .top3 .n{color:var(--txt)}
+  .mt .top3 .v{color:var(--sub)}
+  footer{padding:10px 16px 16px;font-size:11px;color:var(--sub);text-align:center}
+  a{color:var(--blue);text-decoration:none}
+</style>
+</head>
+<body>
+<div id="phone">
+  <header>
+    <div class="t">战绩榜</div>
+    <div class="s">竞技场历史战绩 · 实时累计</div>
+  </header>
+  <div class="seg">
+    <button id="bLb" class="on" onclick="switchTab('lb')">🏆 总榜</button>
+    <button id="bHt" onclick="switchTab('ht')">📜 最近对局</button>
+  </div>
+  <div id="list"><div class="empty">加载中…</div></div>
+  <footer><a href="arena-console.html">主播控制台</a> · <a href="arena-overlay.html">直播叠加层</a></footer>
+</div>
+<script>
+const roomId = new URLSearchParams(location.search).get('roomId') || '';
+const qs = roomId ? ('?roomId='+encodeURIComponent(roomId)) : '';
+const api = (p) => fetch('/api/arena'+p).then(r=>r.json());
+let tab = 'lb';
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+async function switchTab(t){
+  tab = t;
+  document.getElementById('bLb').className = (t==='lb')?'on':'';
+  document.getElementById('bHt').className = (t==='ht')?'on':'';
+  await render();
+}
+
+async function render(){
+  const list = document.getElementById('list');
+  if(tab==='lb'){
+    const {players} = await api('/leaderboard?period=all'+qs);
+    if(!players || !players.length){ list.innerHTML='<div class="empty">还没有战绩，去竞技场答题吧</div>'; return; }
+    list.innerHTML = players.map((p,i)=>{
+      const rk = i<3 ? 'rk r'+(i+1) : 'rk';
+      return `<div class="pl"><div class="${rk}">${i+1}</div>
+        <div class="nm">${esc(p.nickname)}</div>
+        <div class="sc"><b>${p.total_score}</b>
+          <span>${p.games}场 · <span class="win">${p.wins}胜</span> · 最高${p.best_score}</span></div></div>`;
+    }).join('');
+  } else {
+    const {matches} = await api('/history'+qs);
+    if(!matches || !matches.length){ list.innerHTML='<div class="empty">还没有对局记录</div>'; return; }
+    list.innerHTML = matches.map(m=>{
+      const top3 = m.top3 ? m.top3.split(',').map(s=>{
+        const i=s.lastIndexOf('('); const n=esc(s.slice(0,i)); const v=s.slice(i+1,-1);
+        return `<span class="o">●</span><span class="n">${n}</span> <span class="v">${v}</span>`;
+      }).join(' &nbsp; ') : '<span class="v">—</span>';
+      return `<div class="mt"><div class="top"><span class="when">${m.ended_at}</span>
+        <span class="tag">${m.rounds}题 · ${m.participants}人</span></div>
+        <div class="top3">${top3}</div></div>`;
+    }).join('');
+  }
+}
+render();
+setInterval(()=>{ if(tab==='lb') render(); }, 5000); // 总榜自动刷新
+</script>
+</body>
+</html>

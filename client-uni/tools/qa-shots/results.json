@@ -1,0 +1,1237 @@
+{
+  "pages/index/index": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/index/index",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "10月8日 周四 · 今日目标 50 题",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "今日刷题",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "平均正确率",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "连续打卡",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "120 分钟 · 130 题 · 真考节奏",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "还没有题库，点这里新建 →",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/stats/today' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED",
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/banks' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "page_errors": []
+  },
+  "pages/banks/banks": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/banks/banks",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "换个关键词，或新建一个题库开始刷题",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "📚",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 40,
+          "bold": false,
+          "contrast": 15.57,
+          "large": true,
+          "pass": true
+        },
+        {
+          "text": "没有匹配的题目库",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "全部",
+          "color": "#ffffff",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 18.72,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "新建题库",
+          "color": "#ffffff",
+          "bg": "#0b1220",
+          "fontSize": 16,
+          "bold": false,
+          "contrast": 18.72,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/banks' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "page_errors": []
+  },
+  "pages/arena/arena": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/arena/arena",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "竞技场战绩都记在这个名字下，之后可在「我的」里修",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "先给自己起个名字",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 17,
+          "bold": true,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "开始",
+          "color": "#ffffff",
+          "bg": "#0b1220",
+          "fontSize": 16,
+          "bold": false,
+          "contrast": 18.72,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/arena-room/arena-room": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/arena-room/arena-room",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "等待房主发题…",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "⚔ 房间 default",
+          "color": "#c7d2fe",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 12.55,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "👥 0 人",
+          "color": "#c7d2fe",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 12.55,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "第 0 题",
+          "color": "#c7d2fe",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 12.55,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "⚡ 对决准备中",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 18,
+          "bold": true,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/arena/state?roomId=default&viewer=%E6%B8%B8%E5%AE%A2' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED",
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/arena/state?roomId=default&viewer=%E6%B8%B8%E5%AE%A2' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "page_errors": []
+  },
+  "pages/stats/stats": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/stats/stats",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "今日练习",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "正确率",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "连续天数",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "本月暂无练习数据",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "0 题待复习",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "✗",
+          "color": "#f87171",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": true,
+          "contrast": 6.77,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/stats/overview?period=month' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "page_errors": []
+  },
+  "pages/mine/mine": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/mine/mine",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "场次",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "胜率",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "积分",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "⚙",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": true,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "考试刷题 · 豫ICP备2024091146号",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 11,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "✗",
+          "color": "#f87171",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": true,
+          "contrast": 6.77,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/bank-detail/bank-detail": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/bank-detail/bank-detail",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": []
+    },
+    "console_errors": [
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/banks' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "page_errors": []
+  },
+  "pages/practice/practice": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/practice/practice",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": []
+    },
+    "console_errors": [
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/banks//questions?mode=all' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED",
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/banks//questions?mode=all' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "page_errors": []
+  },
+  "pages/summary/summary": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/summary/summary",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "本轮正确率",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "答对题数",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "总用时",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "平均每题",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "0%",
+          "color": "#f87171",
+          "bg": "#0b1220",
+          "fontSize": 44,
+          "bold": true,
+          "contrast": 6.77,
+          "large": true,
+          "pass": true
+        },
+        {
+          "text": "再来一轮",
+          "color": "#c7d2fe",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 12.55,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/bank-add/bank-add": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/bank-add/bank-add",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "标称题量（选填，用于展示进度）",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "文件批量导入将在后台管理端提供，手机端请手动录入",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "题库名称",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "分类标签（选填，逗号分隔）",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "创建题库",
+          "color": "#ffffff",
+          "bg": "#0b1220",
+          "fontSize": 16,
+          "bold": false,
+          "contrast": 18.72,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/question-add/question-add": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/question-add/question-add",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "点选项圆圈标记正确项（单选/判断只认第一个）",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "A",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "B",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "C",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "D",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "保存题目",
+          "color": "#ffffff",
+          "bg": "#0b1220",
+          "fontSize": 16,
+          "bold": false,
+          "contrast": 18.72,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/wrong/wrong": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/wrong/wrong",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "刷题答错的题会自动收进来，方便针对性复习",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "🎉",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 40,
+          "bold": false,
+          "contrast": 15.57,
+          "large": true,
+          "pass": true
+        },
+        {
+          "text": "错题本是空的",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/wrong/list' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "page_errors": []
+  },
+  "pages/setting/setting": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/setting/setting",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "打乱题库原顺序刷题",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "答错时停留看解析，不自动跳走",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "836323493@qq.com",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "清空本机昵称与偏好设置（不影响服务端记录）",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "备案号：豫ICP备2024091146号",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "版本：1.0.0",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/agreement/agreement": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/agreement/agreement",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "更新日期：2026-10-06",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "本应用为个人开发的学习工具。为记录你的学习进度，",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "上述信息仅用于在你本机与服务端之间同步学习数据，",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "数据存储在开发者自建服务器中，通过加密传输。我们",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "你可以随时在「我的」页面修改昵称，在设置页清除本",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "为维护社区环境，你设置的昵称会经过内容安全校验，",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/login/login": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/login/login",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "游客模式可用；竞技场战绩将记在这个名字下",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "客",
+          "color": "#6ea8ff",
+          "bg": "#0b1220",
+          "fontSize": 28,
+          "bold": true,
+          "contrast": 7.76,
+          "large": true,
+          "pass": true
+        },
+        {
+          "text": "设置你的昵称",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 18,
+          "bold": true,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "开始使用",
+          "color": "#ffffff",
+          "bg": "#0b1220",
+          "fontSize": 16,
+          "bold": false,
+          "contrast": 18.72,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/exam-setup/exam-setup": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/exam-setup/exam-setup",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "还没有题库，先去新建一个",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "选择题库",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "题量",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "限时",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "开始模考",
+          "color": "#ffffff",
+          "bg": "#0b1220",
+          "fontSize": 16,
+          "bold": false,
+          "contrast": 18.72,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/banks' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "page_errors": []
+  },
+  "pages/exam-run/exam-run": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/exam-run/exam-run",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": []
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/exam-report/exam-report": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/exam-report/exam-report",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "暂无模考报告，先完成一次模考吧",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 14,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "去模考",
+          "color": "#ffffff",
+          "bg": "#0b1220",
+          "fontSize": 16,
+          "bold": false,
+          "contrast": 18.72,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/migrate/migrate": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/migrate/migrate",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "本 App 免注册，刷题记录、错题本、统计都绑定",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "当前设备 ID：91f240e5",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "迁移码 24 小时内有效，只能使用一次。",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "把这设备早期（未做身份区分时）刷过的题归到当前名",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "生成迁移码",
+          "color": "#c7d2fe",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 12.55,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "数据跟着设备走",
+          "color": "#e7eaf3",
+          "bg": "#0b1220",
+          "fontSize": 15,
+          "bold": false,
+          "contrast": 15.57,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/import/import": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/import/import",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "Excel 可「另存为 → CSV（UTF-8）",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "选择 CSV / TSV 文件",
+          "color": "#6ea8ff",
+          "bg": "#0b1220",
+          "fontSize": 14,
+          "bold": false,
+          "contrast": 7.76,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "粘贴文本（PDF/Word）",
+          "color": "#c7d2fe",
+          "bg": "#0b1220",
+          "fontSize": 14,
+          "bold": false,
+          "contrast": 12.55,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "文件导入（CSV/TSV）",
+          "color": "#ffffff",
+          "bg": "#0b1220",
+          "fontSize": 14,
+          "bold": false,
+          "contrast": 18.72,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "导入（0 题）",
+          "color": "#000000",
+          "bg": "#f7f7f7",
+          "fontSize": 16,
+          "bold": false,
+          "contrast": 19.6,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  },
+  "pages/favorite/favorite": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/favorite/favorite",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "还没有收藏任何题目。刷题时点 ★ 即可收藏好题。",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 14,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "笔记 0",
+          "color": "#c7d2fe",
+          "bg": "#0b1220",
+          "fontSize": 14,
+          "bold": false,
+          "contrast": 12.55,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "收藏 0",
+          "color": "#ffffff",
+          "bg": "#0b1220",
+          "fontSize": 14,
+          "bold": false,
+          "contrast": 18.72,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [
+      "Access to XMLHttpRequest at 'https://kaoshi.malanxi.top/api/favorite/list' from origin 'http://127.0.0.1:8899' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "page_errors": []
+  },
+  "pages/about/about": {
+    "url": "http://127.0.0.1:8899/h5/#/pages/about/about",
+    "measure": {
+      "bodyBg": "#0b1220",
+      "htmlBg": "#0b1220",
+      "docBg": "#0b1220",
+      "samples": [
+        {
+          "text": "版本 1.0.0",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "点击复制 · 可在工信部备案系统查验",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "马杏争",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "点击复制",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 12,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "本应用为个人开发的学习工具，题目均为模拟练习题，",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        },
+        {
+          "text": "隐私政策与用户协议可在「我的 - 设置」中查看。",
+          "color": "#8b96b5",
+          "bg": "#0b1220",
+          "fontSize": 13,
+          "bold": false,
+          "contrast": 6.35,
+          "large": false,
+          "pass": true
+        }
+      ]
+    },
+    "console_errors": [],
+    "page_errors": []
+  }
+}

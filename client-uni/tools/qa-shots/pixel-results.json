@@ -1,0 +1,283 @@
+[
+  {
+    "page": "import",
+    "route": "pages/import/import",
+    "class": "btn-primary disabled",
+    "disabled": true,
+    "computed": {
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(22, 32, 58)",
+      "backgroundImage": "none",
+      "opacity": "0.5",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    "computed_contrast_note": "computed color vs backgroundColor（含 opacity 计算前）",
+    "shot": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\qa-shots\\pixel-import-btn.png",
+    "pixel": {
+      "size": [
+        366,
+        49
+      ],
+      "bg": [
+        17,
+        25,
+        45
+      ],
+      "fg": [
+        121,
+        125,
+        134
+      ],
+      "fg99": [
+        133,
+        137,
+        144
+      ],
+      "contrast": 4.24,
+      "contrast_fg99": 4.98
+    }
+  },
+  {
+    "page": "bank-add",
+    "route": "pages/bank-add/bank-add",
+    "class": "btn-primary disabled",
+    "disabled": true,
+    "computed": {
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(22, 32, 58)",
+      "backgroundImage": "none",
+      "opacity": "0.5",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    "computed_contrast_note": "computed color vs backgroundColor（含 opacity 计算前）",
+    "shot": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\qa-shots\\pixel-bank-add-btn.png",
+    "pixel": {
+      "size": [
+        324,
+        48
+      ],
+      "bg": [
+        22,
+        31,
+        51
+      ],
+      "fg": [
+        137,
+        140,
+        147
+      ],
+      "fg99": [
+        139,
+        143,
+        149
+      ],
+      "contrast": 4.88,
+      "contrast_fg99": 5.06
+    }
+  },
+  {
+    "page": "exam-setup",
+    "route": "pages/exam-setup/exam-setup",
+    "class": "btn-primary disabled",
+    "disabled": true,
+    "computed": {
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(22, 32, 58)",
+      "backgroundImage": "none",
+      "opacity": "0.5",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    "computed_contrast_note": "computed color vs backgroundColor（含 opacity 计算前）",
+    "shot": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\qa-shots\\pixel-exam-setup-btn.png",
+    "pixel": {
+      "size": [
+        358,
+        48
+      ],
+      "bg": [
+        17,
+        25,
+        45
+      ],
+      "fg": [
+        127,
+        131,
+        139
+      ],
+      "fg99": [
+        133,
+        137,
+        144
+      ],
+      "contrast": 4.6,
+      "contrast_fg99": 4.98
+    }
+  },
+  {
+    "page": "login",
+    "route": "pages/login/login",
+    "class": "btn-primary disabled",
+    "disabled": true,
+    "computed": {
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(22, 32, 58)",
+      "backgroundImage": "none",
+      "opacity": "0.5",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    "computed_contrast_note": "computed color vs backgroundColor（含 opacity 计算前）",
+    "shot": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\qa-shots\\pixel-login-btn.png",
+    "pixel": {
+      "size": [
+        324,
+        48
+      ],
+      "bg": [
+        22,
+        31,
+        51
+      ],
+      "fg": [
+        134,
+        138,
+        145
+      ],
+      "fg99": [
+        139,
+        143,
+        149
+      ],
+      "contrast": 4.74,
+      "contrast_fg99": 5.06
+    }
+  },
+  {
+    "page": "migrate",
+    "route": "pages/migrate/migrate",
+    "class": "btn-primary disabled",
+    "disabled": true,
+    "computed": {
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(22, 32, 58)",
+      "backgroundImage": "none",
+      "opacity": "0.5",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    "computed_contrast_note": "computed color vs backgroundColor（含 opacity 计算前）",
+    "shot": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\qa-shots\\pixel-migrate-btn.png",
+    "pixel": {
+      "size": [
+        324,
+        49
+      ],
+      "bg": [
+        22,
+        31,
+        51
+      ],
+      "fg": [
+        135,
+        138,
+        145
+      ],
+      "fg99": [
+        139,
+        143,
+        149
+      ],
+      "contrast": 4.75,
+      "contrast_fg99": 5.06
+    }
+  },
+  {
+    "page": "practice",
+    "route": "pages/practice/practice",
+    "injected": true,
+    "class": "btn-primary disabled",
+    "disabled": true,
+    "computed": {
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(22, 32, 58)",
+      "backgroundImage": "none",
+      "opacity": "0.5",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    "computed_contrast_note": "computed color vs backgroundColor（含 opacity 计算前）",
+    "shot": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\qa-shots\\pixel-practice-btn.png",
+    "pixel": {
+      "size": [
+        324,
+        48
+      ],
+      "bg": [
+        17,
+        25,
+        45
+      ],
+      "fg": [
+        86,
+        91,
+        104
+      ],
+      "fg99": [
+        133,
+        137,
+        144
+      ],
+      "contrast": 2.58,
+      "contrast_fg99": 4.98
+    }
+  },
+  {
+    "page": "question-add",
+    "route": "pages/question-add/question-add",
+    "class": "btn-primary disabled",
+    "disabled": true,
+    "computed": {
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(22, 32, 58)",
+      "backgroundImage": "none",
+      "opacity": "0.5",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    "computed_contrast_note": "computed color vs backgroundColor（含 opacity 计算前）",
+    "shot": "D:\\clean\\2026-09-29-16-18-28\\kaoshi-app\\client-uni\\tools\\qa-shots\\pixel-question-add-btn.png",
+    "pixel": {
+      "size": [
+        358,
+        48
+      ],
+      "bg": [
+        17,
+        25,
+        45
+      ],
+      "fg": [
+        127,
+        131,
+        139
+      ],
+      "fg99": [
+        133,
+        137,
+        144
+      ],
+      "contrast": 4.6,
+      "contrast_fg99": 4.98
+    }
+  }
+]

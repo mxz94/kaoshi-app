@@ -1,0 +1,140 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": { "navigationBarTitleText": "考试刷题" }
+    },
+    {
+      "path": "pages/banks/banks",
+      "style": { "navigationBarTitleText": "刷题" }
+    },
+    // #ifdef H5
+    {
+      "path": "pages/arena/arena",
+      "style": { "navigationBarTitleText": "竞技场" }
+    },
+    {
+      "path": "pages/arena-room/arena-room",
+      "style": { "navigationBarTitleText": "对战答题" }
+    },
+    // #endif
+    {
+      "path": "pages/stats/stats",
+      "style": { "navigationBarTitleText": "统计" }
+    },
+    {
+      "path": "pages/mine/mine",
+      "style": { "navigationBarTitleText": "我的" }
+    },
+    {
+      "path": "pages/bank-detail/bank-detail",
+      "style": { "navigationBarTitleText": "题库详情" }
+    },
+    {
+      "path": "pages/practice/practice",
+      "style": { "navigationBarTitleText": "刷题" }
+    },
+    {
+      "path": "pages/summary/summary",
+      "style": { "navigationBarTitleText": "练习总结" }
+    },
+    {
+      "path": "pages/bank-add/bank-add",
+      "style": { "navigationBarTitleText": "新建题库" }
+    },
+    {
+      "path": "pages/question-add/question-add",
+      "style": { "navigationBarTitleText": "手动录入题目" }
+    },
+    {
+      "path": "pages/wrong/wrong",
+      "style": { "navigationBarTitleText": "错题本" }
+    },
+    {
+      "path": "pages/setting/setting",
+      "style": { "navigationBarTitleText": "设置" }
+    },
+    {
+      "path": "pages/agreement/agreement",
+      "style": { "navigationBarTitleText": "协议" }
+    },
+    {
+      "path": "pages/login/login",
+      "style": { "navigationBarTitleText": "身份设置" }
+    },
+    {
+      "path": "pages/exam-setup/exam-setup",
+      "style": { "navigationBarTitleText": "限时模考" }
+    },
+    {
+      "path": "pages/exam-run/exam-run",
+      "style": { "navigationBarTitleText": "模考进行中" }
+    },
+    {
+      "path": "pages/exam-report/exam-report",
+      "style": { "navigationBarTitleText": "模考报告" }
+    },
+    {
+      "path": "pages/migrate/migrate",
+      "style": { "navigationBarTitleText": "数据迁移" }
+    },
+    {
+      "path": "pages/import/import",
+      "style": { "navigationBarTitleText": "批量导入题库" }
+    },
+    {
+      "path": "pages/favorite/favorite",
+      "style": { "navigationBarTitleText": "收藏与笔记" }
+    },
+    {
+      "path": "pages/about/about",
+      "style": { "navigationBarTitleText": "备案信息" }
+    }
+  ],
+  "tabBar": {
+    "color": "#6b7280",
+    "selectedColor": "#2f6bff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tab/home.png",
+        "selectedIconPath": "static/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/banks/banks",
+        "text": "刷题",
+        "iconPath": "static/tab/edit.png",
+        "selectedIconPath": "static/tab/edit-active.png"
+      },
+      // #ifdef H5
+      {
+        "pagePath": "pages/arena/arena",
+        "text": "竞技",
+        "iconPath": "static/tab/zap.png",
+        "selectedIconPath": "static/tab/zap-active.png"
+      },
+      // #endif
+      {
+        "pagePath": "pages/stats/stats",
+        "text": "统计",
+        "iconPath": "static/tab/chart.png",
+        "selectedIconPath": "static/tab/chart-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "static/tab/user.png",
+        "selectedIconPath": "static/tab/user-active.png"
+      }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "考试刷题",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#f5f7fb"
+  }
+}

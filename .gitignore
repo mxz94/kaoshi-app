@@ -1,0 +1,25 @@
+# 本地密钥 / 运行时产物
+.env
+node_modules/
+# 本地构建/打包产物（部署包由命令生成，不入库）
+deploy-backend/
+deploy-backend.zip
+*.log
+# 旧 node:sqlite 备份（已弃用，保留作回退）
+*.legacy-sqlite.js
+
+# 前端构建产物
+dist/
+# H5 部署包
+h5-deploy.zip
+# 私钥 / 证书
+*.key
+*.pem
+# 本地 SQLite 残留（已弃用方案）
+data/
+# 空缓存 / 临时验证目录
+ce23e2ee2dd2b987df05d8c676c49e11/
+.pwprofile/
+.pwshot/
+.tour/
+_h5_old/

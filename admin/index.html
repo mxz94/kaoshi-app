@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>后台管理 · 考试刷题</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232F6BFF'/%3E%3Cpath d='M9 10h14M9 16h14M9 22h9' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --brand:#2F6BFF; --ok:#16A34A; --err:#EF4444; --warn:#F59E0B;
+    --bg:#F5F7FB; --card:#fff; --line:#E5E9F2; --text:#1F2937; --muted:#6B7280;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;font-size:14px}
+  a{color:var(--brand);text-decoration:none}
+  .btn{border:0;border-radius:8px;padding:8px 14px;background:var(--brand);color:#fff;
+       cursor:pointer;font-size:13px;line-height:1.2}
+  .btn:hover{filter:brightness(1.06)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn.ghost{background:#fff;color:var(--text);border:1px solid var(--line)}
+  .btn.danger{background:var(--err)}
+  .btn.sm{padding:5px 10px;font-size:12px}
+  input,select,textarea{font-family:inherit;font-size:13px;padding:8px 10px;
+       border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);width:100%}
+  textarea{resize:vertical;line-height:1.6}
+  label{display:block;font-size:12px;color:var(--muted);margin:0 0 4px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+
+  /* 登录 */
+  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .login-box{width:100%;max-width:360px;background:#fff;border:1px solid var(--line);
+             border-radius:16px;padding:28px}
+  .login-box h1{font-size:19px;margin:0 0 4px}
+  .login-box p{margin:0 0 20px;color:var(--muted);font-size:12px}
+  .err{color:var(--err);font-size:12px;margin-top:10px;min-height:16px}
+
+  header{background:#fff;border-bottom:1px solid var(--line);padding:12px 20px;
+         display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+  header .title{font-weight:700;font-size:16px}
+  header .spacer{flex:1}
+  header .who{color:var(--muted);font-size:12px}
+  .tabs{display:flex;gap:6px;padding:14px 20px 0}
+  .tab{padding:8px 16px;border-radius:10px 10px 0 0;cursor:pointer;color:var(--muted);
+       border:1px solid transparent;font-size:13px}
+  .tab.on{background:#fff;border-color:var(--line);border-bottom-color:#fff;
+          color:var(--brand);font-weight:600;margin-bottom:-1px}
+  main{padding:16px 20px 40px;max-width:1100px}
+  .view{display:none}.view.on{display:block}
+
+  /* 大盘 */
+  .stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+  .stat .n{font-size:22px;font-weight:700;line-height:1.2}
+  .stat .l{color:var(--muted);font-size:12px;margin-top:2px}
+  .bars{display:flex;align-items:flex-end;gap:10px;height:140px;margin-top:8px}
+  .bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px}
+  .bar .col{width:100%;max-width:44px;background:var(--brand);border-radius:6px 6px 0 0;min-height:2px}
+  .bar .lb{font-size:11px;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;background:#FAFBFE}
+  tr:hover td{background:#FAFBFE}
+  .muted{color:var(--muted)}
+  .tag{display:inline-block;background:#EEF3FF;color:var(--brand);border-radius:6px;
+       padding:2px 7px;font-size:11px;margin-right:4px}
+  .row-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+  /* 题目 */
+  .q{border:1px solid var(--line);border-radius:12px;background:#fff;padding:14px;margin-bottom:12px}
+  .q .stem{font-weight:600;margin-bottom:8px;line-height:1.6}
+  .q .opt{padding:3px 0;color:#374151}
+  .q .opt.right{color:var(--ok);font-weight:600}
+  .q .ana{background:#F8FAFC;border-radius:8px;padding:8px 10px;margin-top:8px;
+          color:var(--muted);font-size:12px;line-height:1.7;white-space:pre-wrap}
+  .pager{display:flex;align-items:center;gap:10px;margin-top:12px}
+  .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  .toolbar input,.toolbar select{width:auto;min-width:140px}
+
+  /* 弹窗 */
+  .mask{position:fixed;inset:0;background:rgba(17,24,39,.45);display:none;
+        align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto;z-index:20}
+  .mask.on{display:flex}
+  .modal{background:#fff;border-radius:14px;width:100%;max-width:620px;padding:20px}
+  .modal h3{margin:0 0 14px;font-size:16px}
+  .field{margin-bottom:12px}
+  .optrow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .optrow input[type=text]{flex:1}
+  .optrow .lb{width:56px}
+  .optrow .ck{width:auto;display:flex;align-items:center;gap:4px;font-size:12px;white-space:nowrap}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:32px;background:#111827;
+         color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;opacity:0;
+         transition:opacity .2s;pointer-events:none;z-index:50}
+  .toast.on{opacity:1}
+  .warn-box{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;border-radius:10px;
+            padding:10px 12px;font-size:12px;line-height:1.7;margin-top:10px}
+  .modes{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:12px}
+  .modes .m{padding:6px 12px;font-size:13px;color:var(--muted);cursor:pointer;
+            border-bottom:2px solid transparent;margin-bottom:-1px}
+  .modes .m.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+  .badtag{display:inline-block;background:#FEE2E2;color:#B91C1C;border-radius:6px;padding:2px 7px;font-size:11px}
+</style>
+</head>
+<body>
+
+<!-- ===== 登录 ===== -->
+<div class="login-wrap" id="loginView">
+  <div class="login-box">
+    <h1>后台管理</h1>
+    <p>考试刷题 · 仅管理员使用</p>
+    <div class="field">
+      <label>账号</label>
+      <input id="lgUser" autocomplete="username" placeholder="admin">
+    </div>
+    <div class="field">
+      <label>密码</label>
+      <input id="lgPass" type="password" autocomplete="current-password">
+    </div>
+    <button class="btn" style="width:100%" id="lgBtn">登录</button>
+    <div class="err" id="lgErr"></div>
+  </div>
+</div>
+
+<!-- ===== 主界面 ===== -->
+<div id="appView" style="display:none">
+  <header>
+    <div class="title">后台管理</div>
+    <div class="who" id="who"></div>
+    <div class="spacer"></div>
+    <button class="btn ghost sm" id="logoutBtn">退出</button>
+  </header>
+  <div class="tabs">
+    <div class="tab on" data-view="dash">数据大盘</div>
+    <div class="tab" data-view="banks">题库管理</div>
+    <div class="tab" data-view="cats">类别管理</div>
+  </div>
+  <main>
+    <section class="view on" id="view-dash">
+      <div class="stats" id="stats"></div>
+      <div class="card" style="margin-top:16px">
+        <div style="font-weight:600;margin-bottom:4px">近 7 日作答</div>
+        <div class="muted" style="font-size:12px" id="trendTip">加载中…</div>
+        <div class="bars" id="trend"></div>
+      </div>
+      <div class="card">
+        <div style="font-weight:600;margin-bottom:10px">题库作答排行</div>
+        <table id="topBanks"><tbody></tbody></table>
+      </div>
+    </section>
+
+    <section class="view" id="view-banks">
+      <div id="bankListPane">
+        <div class="toolbar">
+          <button class="btn" id="newBankBtn">+ 新建题库</button>
+          <button class="btn ghost" id="importBtn">批量导入（CSV）</button>
+          <span class="muted" id="bankCount"></span>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <table id="bankTable">
+            <thead><tr><th style="width:60px">ID</th><th>名称</th><th style="width:90px">类别</th><th>分类</th>
+              <th style="width:80px">题数</th><th style="width:90px">作答</th>
+              <th style="width:150px">创建时间</th><th style="width:190px">操作</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="qListPane" style="display:none">
+        <div class="toolbar">
+          <button class="btn ghost sm" id="backToBanks">← 返回题库</button>
+          <select id="bankSelect"></select>
+          <input id="kw" placeholder="搜索题干/解析">
+          <button class="btn sm" id="searchBtn">搜索</button>
+          <button class="btn sm" id="newQBtn">+ 新增题目</button>
+          <span class="muted" id="qCount"></span>
+        </div>
+        <div id="qList"></div>
+        <div class="pager">
+          <button class="btn ghost sm" id="prevBtn">上一页</button>
+          <span class="muted" id="pageInfo"></span>
+          <button class="btn ghost sm" id="nextBtn">下一页</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-cats">
+      <div class="toolbar">
+        <button class="btn" id="newCatBtn">+ 新增顶级类别</button>
+        <span class="muted">类别支持 3 级树形（模块 → 子类 → 子子类，如 行测 → 言语理解与表达 → 逻辑填空）。行测默认分类已预置。删除类别前需先清空其下题库与子类别。</span>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <table id="catTable">
+          <thead><tr><th style="width:60px">ID</th><th>类别名称</th><th style="width:90px">题库数</th>
+            <th style="width:200px">操作</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ===== 弹窗 ===== -->
+<div class="mask" id="mask"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var API = '/api/admin';
+  var TOKEN_KEY = 'kaoshi_admin_token';
+  var token = localStorage.getItem(TOKEN_KEY) || '';
+  var state = { banks: [], categories: [], bankId: 0, page: 0, limit: 20, total: 0, kw: '' };
+
+  var $ = function (s) { return document.querySelector(s); };
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  var toastTimer;
+  function toast(msg) {
+    var t = $('#toast'); t.textContent = msg; t.classList.add('on');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('on'); }, 2200);
+  }
+  function openModal(html) { $('#modal').innerHTML = html; $('#mask').classList.add('on'); }
+  function closeModal() { $('#mask').classList.remove('on'); $('#modal').innerHTML = ''; }
+  $('#mask').addEventListener('click', function (e) { if (e.target === $('#mask')) closeModal(); });
+
+  // ===== 请求 =====
+  function api(path, opts) {
+    opts = opts || {};
+    var headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    return fetch(API + path, {
+      method: opts.method || 'GET',
+      headers: headers,
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+    }).then(function (r) {
+      if (r.status === 401) { logout(); throw new Error('登录已过期'); }
+      return r.json().then(function (d) {
+        if (!r.ok) throw new Error(d && d.error ? d.error : ('请求失败 ' + r.status));
+        return d;
+      });
+    });
+  }
+
+  function logout() {
+    localStorage.removeItem(TOKEN_KEY); token = '';
+    $('#appView').style.display = 'none'; $('#loginView').style.display = 'flex';
+  }
+
+  // ===== 登录 =====
+  function doLogin() {
+    var u = $('#lgUser').value.trim(), p = $('#lgPass').value;
+    $('#lgErr').textContent = '';
+    if (!u || !p) { $('#lgErr').textContent = '请填写账号和密码'; return; }
+    $('#lgBtn').disabled = true; $('#lgBtn').textContent = '登录中…';
+    fetch(API + '/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: p }),
+    }).then(function (r) {
+      return r.json().then(function (d) {
+        if (!r.ok) throw new Error(d && d.error ? d.error : '登录失败');
+        return d;
+      });
+    }).then(function (d) {
+      token = d.token; localStorage.setItem(TOKEN_KEY, token);
+      $('#lgPass').value = '';
+      enterApp();
+    }).catch(function (e) {
+      $('#lgErr').textContent = e.message;
+    }).then(function () {
+      $('#lgBtn').disabled = false; $('#lgBtn').textContent = '登录';
+    });
+  }
+  $('#lgBtn').addEventListener('click', doLogin);
+  $('#lgPass').addEventListener('keydown', function (e) { if (e.key === 'Enter') doLogin(); });
+  $('#lgUser').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('#lgPass').focus(); });
+  $('#logoutBtn').addEventListener('click', logout);
+
+  function enterApp() {
+    $('#loginView').style.display = 'none';
+    $('#appView').style.display = 'block';
+    api('/me').then(function (d) {
+      $('#who').textContent = '管理员 ' + d.user;
+    }).catch(function () {});
+    loadDash(); loadBanks(); loadCategories();
+  }
+
+  // Tab 切换
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (t) {
+    t.addEventListener('click', function () {
+      Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (x) { x.classList.remove('on'); });
+      Array.prototype.forEach.call(document.querySelectorAll('.view'), function (x) { x.classList.remove('on'); });
+      t.classList.add('on');
+      $('#view-' + t.dataset.view).classList.add('on');
+    });
+  });
+
+  // ===== 数据大盘 =====
+  function loadDash() {
+    api('/overview').then(function (d) {
+      var items = [
+        ['题库数', d.banks], ['题目总数', d.questions], ['累计作答', d.answers],
+        ['总正确率', d.accuracy + '%'], ['用户数', d.users], ['今日活跃', d.todayUsers],
+        ['今日作答', d.todayAnswers], ['错题记录', d.wrongs], ['收藏', d.favorites],
+        ['笔记', d.notes], ['竞技对局', d.arenaMatches], ['竞技玩家', d.arenaPlayers],
+      ];
+      $('#stats').innerHTML = items.map(function (it) {
+        return '<div class="stat"><div class="n">' + esc(it[1]) + '</div><div class="l">' + esc(it[0]) + '</div></div>';
+      }).join('');
+
+      var max = 1;
+      d.trend.forEach(function (t) { if (t.answers > max) max = t.answers; });
+      if (!d.trend.length) {
+        $('#trendTip').textContent = '暂无作答数据';
+        $('#trend').innerHTML = '';
+      } else {
+        $('#trendTip').textContent = '峰值 ' + max + ' 次/日';
+        $('#trend').innerHTML = d.trend.map(function (t) {
+          var h = Math.round((t.answers / max) * 110);
+          return '<div class="bar"><div class="col" style="height:' + h + 'px" title="' +
+            t.correct + '/' + t.answers + '"></div><div class="lb">' + esc(t.date.slice(5)) + '</div></div>';
+        }).join('');
+      }
+
+      $('#topBanks tbody').innerHTML = d.topBanks.length
+        ? d.topBanks.map(function (b) {
+            var acc = b.answers > 0 ? Math.round((b.correct / b.answers) * 100) : 0;
+            return '<tr><td>' + esc(b.name) + '</td><td style="width:90px">' + b.answers +
+              ' 次</td><td style="width:90px">' + acc + '%</td></tr>';
+          }).join('')
+        : '<tr><td class="muted">暂无数据</td></tr>';
+    }).catch(function (e) { toast('大盘加载失败：' + e.message); });
+  }
+
+  // ===== 题库 =====
+  function loadBanks() {
+    api('/banks').then(function (list) {
+      state.banks = list;
+      $('#bankCount').textContent = '共 ' + list.length + ' 个题库';
+      $('#bankTable tbody').innerHTML = list.length
+        ? list.map(function (b) {
+            return '<tr>' +
+              '<td>' + b.id + '</td>' +
+              '<td>' + esc(b.name) + '</td>' +
+              '<td><span class="tag">' + esc(b.categoryName || '未分类') + '</span></td>' +
+              '<td>' + (b.categories || []).map(function (c) { return '<span class="tag">' + esc(c) + '</span>'; }).join('') + '</td>' +
+              '<td>' + b.questionCount + '</td>' +
+              '<td>' + b.answers + '</td>' +
+              '<td class="muted">' + esc(String(b.createdAt || '').slice(0, 19)) + '</td>' +
+              '<td><div class="row-actions">' +
+                '<button class="btn sm" data-act="qs" data-id="' + b.id + '">题目</button>' +
+                '<button class="btn ghost sm" data-act="edit" data-id="' + b.id + '">编辑</button>' +
+                '<button class="btn danger sm" data-act="del" data-id="' + b.id + '">删除</button>' +
+              '</div></td></tr>';
+          }).join('')
+        : '<tr><td colspan="8" class="muted">还没有题库，点「新建题库」或「批量导入」</td></tr>';
+      var sel = $('#bankSelect');
+      var keep = sel.value;
+      sel.innerHTML = list.map(function (b) {
+        return '<option value="' + b.id + '">' + esc(b.name) + '（' + b.questionCount + '题）</option>';
+      }).join('');
+      if (state.bankId) sel.value = state.bankId;
+      else if (keep) sel.value = keep;
+    }).catch(function (e) { toast('题库加载失败：' + e.message); });
+  }
+
+  $('#bankTable').addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    var id = Number(btn.dataset.id);
+    var act = btn.dataset.act;
+    if (act === 'qs') { openQuestions(id); }
+    else if (act === 'edit') { editBank(id); }
+    else if (act === 'del') { delBank(id); }
+  });
+
+  function bankForm(b) {
+    var isEdit = !!b;
+    var cats = (b && b.categories ? b.categories : []).join(', ');
+    openModal(
+      '<h3>' + (isEdit ? '编辑题库' : '新建题库') + '</h3>' +
+      '<div class="field"><label>题库名称</label><input id="bkName" value="' + esc(b ? b.name : '') + '"></div>' +
+      '<div class="field"><label>考试类别</label><select id="bkCat">' + catOptions(b ? b.categoryId : null) + '</select></div>' +
+      '<div class="field"><label>分类（模块标签，多个用逗号分隔，可留空）</label><input id="bkCats" value="' + esc(cats) + '" placeholder="言语理解,判断推理"></div>' +
+      '<div class="modal-actions">' +
+        '<button class="btn ghost" id="bkCancel">取消</button>' +
+        '<button class="btn" id="bkSave">保存</button>' +
+      '</div>'
+    );
+    $('#bkCancel').onclick = closeModal;
+    $('#bkSave').onclick = function () {
+      var name = $('#bkName').value.trim();
+      if (!name) { toast('名称不能为空'); return; }
+      var categories = $('#bkCats').value.split(/[,，]/).map(function (s) { return s.trim(); }).filter(Boolean);
+      var categoryId = Number($('#bkCat').value) || null;
+      var p = isEdit
+        ? api('/banks/' + b.id, { method: 'PUT', body: { name: name, categories: categories, categoryId: categoryId } })
+        : api('/banks', { method: 'POST', body: { name: name, categories: categories, categoryId: categoryId } });
+      p.then(function () { closeModal(); toast('已保存'); loadBanks(); })
+       .catch(function (e) { toast('保存失败：' + e.message); });
+    };
+  }
+  $('#newBankBtn').addEventListener('click', function () { bankForm(null); });
+  function editBank(id) {
+    var b = state.banks.filter(function (x) { return x.id === id; })[0];
+    bankForm(b);
+  }
+  function delBank(id) {
+    var b = state.banks.filter(function (x) { return x.id === id; })[0];
+    if (!b) return;
+    if (!confirm('确定删除题库「' + b.name + '」？\n该题库下 ' + b.questionCount +
+      ' 道题及其练习/错题/收藏/笔记记录将一并删除，且不可恢复。')) return;
+    api('/banks/' + id, { method: 'DELETE' })
+      .then(function () { toast('已删除'); loadBanks(); })
+      .catch(function (e) { toast('删除失败：' + e.message); });
+  }
+
+  // ===== 类别管理（3 级树形） =====
+  function loadCategories() {
+    api('/categories').then(function (list) {
+      state.categories = list;
+      renderCatTable();
+    }).catch(function (e) { toast('类别加载失败：' + e.message); });
+  }
+
+  var _catMap = {};
+  function catMap() {
+    _catMap = {};
+    state.categories.forEach(function (c) { _catMap[c.id] = c; });
+    return _catMap;
+  }
+  function catDepth(c) {
+    var d = 1, p = c.parentId, map = catMap();
+    while (p && map[p]) { d++; p = map[p].parentId; }
+    return d;
+  }
+  function catPath(c) {
+    var map = catMap(), parts = [c.name], p = c.parentId;
+    while (p && map[p]) { parts.unshift(map[p].name); p = map[p].parentId; }
+    return parts.join(' / ');
+  }
+  function buildCatTree() {
+    var map = catMap(), roots = [];
+    state.categories.forEach(function (c) { c.children = []; });
+    state.categories.forEach(function (c) {
+      if (c.parentId && map[c.parentId]) map[c.parentId].children.push(c);
+      else roots.push(c);
+    });
+    function sortRec(list) {
+      list.sort(function (a, b) { return (a.sort - b.sort) || (a.id - b.id); });
+      list.forEach(function (c) { sortRec(c.children); });
+    }
+    sortRec(roots);
+    return roots;
+  }
+
+  var CAT_LEVEL = ['顶级', '二级', '三级'];
+  function renderCatTable() {
+    var roots = buildCatTree(), rows = [];
+    function walk(c, depth) {
+      var indent = (depth - 1) * 24;
+      rows.push('<tr>' +
+        '<td>' + c.id + '</td>' +
+        '<td><div style="padding-left:' + indent + 'px">' +
+          (depth > 1 ? '<span class="muted">└ </span>' : '') +
+          '<strong>' + esc(c.name) + '</strong>' +
+          ' <span class="tag" style="margin-left:6px">' + (CAT_LEVEL[depth - 1] || (depth + '级')) + '</span>' +
+        '</div></td>' +
+        '<td>' + (c.banks || 0) + '</td>' +
+        '<td><div class="row-actions">' +
+          (depth < 3 ? '<button class="btn ghost sm" data-cat="addsub" data-id="' + c.id + '" data-name="' + esc(c.name) + '">+子级</button>' : '') +
+          '<button class="btn ghost sm" data-cat="rename" data-id="' + c.id + '" data-name="' + esc(c.name) + '">改名</button>' +
+          '<button class="btn danger sm" data-cat="del" data-id="' + c.id + '" data-name="' + esc(c.name) + '" data-banks="' + (c.banks || 0) + '">删除</button>' +
+        '</div></td></tr>');
+      c.children.forEach(function (k) { walk(k, depth + 1); });
+    }
+    roots.forEach(function (r) { walk(r, 1); });
+    $('#catTable tbody').innerHTML = rows.length ? rows.join('') : '<tr><td colspan="4" class="muted">还没有类别，点「新增顶级类别」</td></tr>';
+  }
+
+  $('#catTable').addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-cat]');
+    if (!btn) return;
+    var id = Number(btn.dataset.id);
+    if (btn.dataset.cat === 'addsub') {
+      var sub = prompt('在「' + btn.dataset.name + '」下新增子类别（如：逻辑填空、片段阅读…）', '');
+      if (sub == null) return;
+      sub = sub.trim();
+      if (!sub) { toast('名称不能为空'); return; }
+      api('/categories', { method: 'POST', body: { name: sub, parentId: id } })
+        .then(function () { toast('已添加子类别'); loadCategories(); })
+        .catch(function (err) { toast('添加失败：' + err.message); });
+    } else if (btn.dataset.cat === 'rename') {
+      var name = prompt('修改类别名称', btn.dataset.name);
+      if (name == null) return;
+      name = name.trim();
+      if (!name) { toast('名称不能为空'); return; }
+      api('/categories/' + id, { method: 'PUT', body: { name: name } })
+        .then(function () { toast('已改名'); loadCategories(); })
+        .catch(function (err) { toast('改名失败：' + err.message); });
+    } else if (btn.dataset.cat === 'del') {
+      if (Number(btn.dataset.banks) > 0) {
+        toast('该类别下还有 ' + btn.dataset.banks + ' 个题库，请先迁移或删除');
+        return;
+      }
+      if (!confirm('确定删除类别「' + btn.dataset.name + '」？（如有子类别或题库会被阻止）')) return;
+      api('/categories/' + id, { method: 'DELETE' })
+        .then(function () { toast('已删除'); loadCategories(); })
+        .catch(function (err) { toast('删除失败：' + err.message); });
+    }
+  });
+
+  $('#newCatBtn').addEventListener('click', function () {
+    var name = prompt('新顶级类别名称（如：教资、会计、医学、建造…）', '');
+    if (name == null) return;
+    name = name.trim();
+    if (!name) { toast('名称不能为空'); return; }
+    api('/categories', { method: 'POST', body: { name: name } })
+      .then(function () { toast('已添加'); loadCategories(); })
+      .catch(function (err) { toast('添加失败：' + err.message); });
+  });
+
+  // 生成类别下拉选项：树形顺序 + 层级缩进（悬浮 title 显示完整路径）
+  function catOptions(selectedId) {
+    var roots = buildCatTree(), out = [];
+    function walk(c, depth) {
+      out.push('<option value="' + c.id + '"' + (selectedId === c.id ? ' selected' : '') +
+        ' title="' + esc(catPath(c)) + '">' +
+        new Array(depth).join('　') + (depth > 1 ? '├ ' : '') + esc(c.name) + '</option>');
+      c.children.forEach(function (k) { walk(k, depth + 1); });
+    }
+    roots.forEach(function (r) { walk(r, 1); });
+    return out.join('');
+  }
+
+  // ===== 题目 =====
+  function openQuestions(bankId) {
+    state.bankId = bankId; state.page = 0; state.kw = '';
+    $('#kw').value = '';
+    $('#bankListPane').style.display = 'none';
+    $('#qListPane').style.display = 'block';
+    $('#bankSelect').value = bankId;
+    loadQuestions();
+  }
+  $('#backToBanks').addEventListener('click', function () {
+    $('#qListPane').style.display = 'none';
+    $('#bankListPane').style.display = 'block';
+    loadBanks();
+  });
+  $('#bankSelect').addEventListener('change', function () { openQuestions(Number(this.value)); });
+  $('#searchBtn').addEventListener('click', function () { state.kw = $('#kw').value.trim(); state.page = 0; loadQuestions(); });
+  $('#kw').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('#searchBtn').click(); });
+  $('#prevBtn').addEventListener('click', function () { if (state.page > 0) { state.page--; loadQuestions(); } });
+  $('#nextBtn').addEventListener('click', function () {
+    if ((state.page + 1) * state.limit < state.total) { state.page++; loadQuestions(); }
+  });
+
+  function loadQuestions() {
+    var q = '?limit=' + state.limit + '&offset=' + (state.page * state.limit) +
+      (state.kw ? '&keyword=' + encodeURIComponent(state.kw) : '');
+    api('/banks/' + state.bankId + '/questions' + q).then(function (d) {
+      state.total = d.total;
+      $('#qCount').textContent = '共 ' + d.total + ' 题';
+      $('#pageInfo').textContent = '第 ' + (state.page + 1) + ' / ' + Math.max(1, Math.ceil(d.total / state.limit)) + ' 页';
+      $('#prevBtn').disabled = state.page === 0;
+      $('#nextBtn').disabled = (state.page + 1) * state.limit >= d.total;
+      $('#qList').innerHTML = d.list.length
+        ? d.list.map(function (q) {
+            var typeName = { single: '单选', multiple: '多选', judge: '判断' }[q.type] || q.type;
+            return '<div class="q">' +
+              '<div class="stem">#' + q.id + ' <span class="tag">' + esc(typeName) + '</span> ' + esc(q.stem) + '</div>' +
+              (q.options || []).map(function (o) {
+                return '<div class="opt' + (o.isCorrect ? ' right' : '') + '">' + esc(o.label) + '. ' +
+                  esc(o.content) + (o.isCorrect ? '  ✓' : '') + '</div>';
+              }).join('') +
+              (q.analysis ? '<div class="ana">' + esc(q.analysis) + '</div>' : '') +
+              '<div class="row-actions" style="margin-top:10px">' +
+                '<button class="btn sm" data-edit="' + q.id + '">编辑</button>' +
+                '<button class="btn danger sm" data-del="' + q.id + '">删除</button>' +
+              '</div></div>';
+          }).join('')
+        : '<div class="card muted">没有匹配的题目</div>';
+    }).catch(function (e) { toast('题目加载失败：' + e.message); });
+  }
+
+  $('#qList').addEventListener('click', function (e) {
+    var eb = e.target.closest('button[data-edit]');
+    var db = e.target.closest('button[data-del]');
+    if (eb) {
+      var id = Number(eb.dataset.edit);
+      api('/banks/' + state.bankId + '/questions?limit=100&offset=0').then(function (d) {
+        var q = d.list.filter(function (x) { return x.id === id; })[0];
+        if (q) questionForm(q);
+      }).catch(function (err) { toast(err.message); });
+    } else if (db) {
+      var qid = Number(db.dataset.del);
+      if (!confirm('确定删除题目 #' + qid + '？相关练习/错题/收藏/笔记记录也会清除。')) return;
+      api('/questions/' + qid, { method: 'DELETE' })
+        .then(function () { toast('已删除'); loadQuestions(); loadBanks(); })
+        .catch(function (err) { toast('删除失败：' + err.message); });
+    }
+  });
+
+  function optionRow(o) {
+    o = o || { label: '', content: '', isCorrect: false };
+    return '<div class="optrow">' +
+      '<input class="lb" type="text" placeholder="A" value="' + esc(o.label) + '">' +
+      '<input type="text" placeholder="选项内容" value="' + esc(o.content) + '">' +
+      '<label class="ck"><input type="checkbox"' + (o.isCorrect ? ' checked' : '') + '>正确</label>' +
+      '<button class="btn ghost sm rmOpt">删</button>' +
+      '</div>';
+  }
+
+  function questionForm(q) {
+    var isEdit = !!q;
+    var opts = isEdit ? q.options : [
+      { label: 'A', content: '', isCorrect: false },
+      { label: 'B', content: '', isCorrect: false },
+      { label: 'C', content: '', isCorrect: false },
+      { label: 'D', content: '', isCorrect: false },
+    ];
+    openModal(
+      '<h3>' + (isEdit ? '编辑题目 #' + q.id : '新增题目') + '</h3>' +
+      '<div class="field"><label>题型</label><select id="qType">' +
+        ['single:单选', 'multiple:多选', 'judge:判断'].map(function (s) {
+          var kv = s.split(':');
+          return '<option value="' + kv[0] + '"' + (isEdit && q.type === kv[0] ? ' selected' : '') + '>' + kv[1] + '</option>';
+        }).join('') + '</select></div>' +
+      '<div class="field"><label>题干</label><textarea id="qStem" rows="4">' + esc(isEdit ? q.stem : '') + '</textarea></div>' +
+      '<div class="field"><label>选项（勾选正确答案）</label><div id="qOpts">' +
+        opts.map(optionRow).join('') + '</div>' +
+        '<button class="btn ghost sm" id="addOpt" style="margin-top:6px">+ 添加选项</button></div>' +
+      '<div class="field"><label>解析（可留空）</label><textarea id="qAna" rows="3">' + esc(isEdit ? q.analysis : '') + '</textarea></div>' +
+      '<div class="modal-actions">' +
+        '<button class="btn ghost" id="qCancel">取消</button>' +
+        '<button class="btn" id="qSave">保存</button>' +
+      '</div>'
+    );
+    $('#qCancel').onclick = closeModal;
+    $('#addOpt').onclick = function () {
+      var d = document.createElement('div');
+      d.innerHTML = optionRow({ label: String.fromCharCode(65 + $('#qOpts').children.length), content: '', isCorrect: false });
+      $('#qOpts').appendChild(d.firstChild);
+    };
+    $('#qOpts').addEventListener('click', function (e) {
+      if (e.target.classList.contains('rmOpt')) {
+        if ($('#qOpts').children.length <= 2) { toast('至少保留 2 个选项'); return; }
+        e.target.parentNode.remove();
+      }
+    });
+    $('#qSave').onclick = function () {
+      var stem = $('#qStem').value.trim();
+      if (!stem) { toast('题干不能为空'); return; }
+      var options = Array.prototype.map.call($('#qOpts').children, function (row) {
+        var ins = row.querySelectorAll('input');
+        return { label: ins[0].value.trim(), content: ins[1].value.trim(), isCorrect: ins[2].checked };
+      }).filter(function (o) { return o.label || o.content; });
+      if (options.length < 2) { toast('至少 2 个选项'); return; }
+      if (!options.some(function (o) { return o.isCorrect; })) { toast('请勾选至少一个正确答案'); return; }
+      var body = { type: $('#qType').value, stem: stem, analysis: $('#qAna').value.trim(), options: options };
+      var p = isEdit
+        ? api('/questions/' + q.id, { method: 'PUT', body: body })
+        : api('/banks/' + state.bankId + '/questions', { method: 'POST', body: body });
+      p.then(function () { closeModal(); toast('已保存'); loadQuestions(); loadBanks(); })
+       .catch(function (e) { toast('保存失败：' + e.message); });
+    };
+  }
+  $('#newQBtn').addEventListener('click', function () { questionForm(null); });
+
+  // ===== 导入：粘贴题目文本（推荐）/ CSV =====
+  var parsed = [];
+  var SAMPLE = [
+    '1. 下列关于我国宪法的表述，正确的是：',
+    'A. 宪法是国家的根本大法',
+    'B. 宪法可以由国务院修改',
+    'C. 宪法不具有最高法律效力',
+    'D. 宪法仅约束公民',
+    '答案：A',
+    '解析：宪法是国家的根本大法，具有最高法律效力，修改权属于全国人大。',
+    '',
+    '2. 「举一反三」中的「反」是什么意思？',
+    'A. 类推',
+    'B. 反对',
+    'C. 返回',
+    'D. 反复',
+    '答案：A',
+    '解析：举一反三指从一件事情类推而知道其他许多事情，「反」即类推。',
+  ].join('\n');
+
+  $('#importBtn').addEventListener('click', function () {
+    var bankOpts = state.banks.map(function (b) {
+      return '<option value="' + b.id + '">追加到已有题库：' + esc(b.name) + '（' + b.questionCount + ' 题）</option>';
+    }).join('');
+
+    openModal(
+      '<h3>导入题目</h3>' +
+      '<div class="modes"><span class="m on" data-m="paste">粘贴题目</span><span class="m" data-m="csv">CSV 表格</span></div>' +
+      '<div id="panePaste">' +
+        '<div class="muted" style="font-size:12px;line-height:1.8;margin-bottom:8px">' +
+          '从 PDF / Word / 网页复制的题目直接粘进来就行，<b>不用先整理格式</b>。' +
+          '题号写 <b>1.</b> 或 <b>一、</b>，选项写 <b>A.</b>，答案写 <b>答案：B</b>，解析写 <b>解析：…</b>。</div>' +
+        '<textarea id="imText" rows="9" placeholder="1. 题干…&#10;A. 选项一&#10;B. 选项二&#10;答案：A&#10;解析：…"></textarea>' +
+        '<div style="margin-top:8px;display:flex;gap:8px">' +
+          '<button class="btn ghost sm" id="imSample">填入示例</button>' +
+          '<button class="btn sm" id="imParse">解析预览</button>' +
+        '</div>' +
+      '</div>' +
+      '<div id="paneCsv" style="display:none">' +
+        '<div class="muted" style="font-size:12px;line-height:1.8;margin-bottom:8px">' +
+          'Excel 另存为 UTF-8 CSV，表头需含：题干 / 选项A / 选项B / 选项C / 选项D / 答案 / 解析</div>' +
+        '<textarea id="imCsv" rows="8" placeholder="题干,选项A,选项B,选项C,选项D,答案,解析"></textarea>' +
+        '<div style="margin-top:8px"><button class="btn sm" id="imParseCsv">解析预览</button></div>' +
+      '</div>' +
+      '<div class="field" style="margin-top:14px"><label>导入到</label>' +
+        '<select id="imTarget"><option value="new">新建题库</option>' + bankOpts + '</select></div>' +
+      '<div class="field" id="imNameWrap"><label>新题库名称</label>' +
+        '<input id="imName" placeholder="2026 模拟卷（一）"></div>' +
+      '<div class="field"><label>考试类别（新建题库时生效）</label><select id="imCat">' + catOptions(null) + '</select></div>' +
+      '<div class="field"><label>分类（模块标签，逗号分隔，可留空）</label>' +
+        '<input id="imCats" placeholder="言语理解,判断推理"></div>' +
+      '<div id="imWarn"></div>' +
+      '<div id="imPreview"></div>' +
+      '<div class="modal-actions">' +
+        '<button class="btn ghost" id="imCancel">取消</button>' +
+        '<button class="btn" id="imGo" disabled>导入</button>' +
+      '</div>'
+    );
+
+    function renderPreview(warnings) {
+      warnings = warnings || [];
+      var bad = parsed.filter(function (q) {
+        return !q.options.some(function (o) { return o.isCorrect; });
+      }).length;
+      $('#imWarn').innerHTML = parsed.length
+        ? '<div class="warn-box">解析到 <b>' + parsed.length + '</b> 题' +
+          (bad ? '，其中 <b style="color:#B91C1C">' + bad + ' 题没识别出答案</b> —— 在下面点一下正确选项补上即可' : '') +
+          (warnings.length ? '<br>' + esc(warnings.slice(0, 4).join('<br>')) : '') + '</div>'
+        : '<div class="warn-box">没有解析出题目。<br>' + esc(warnings.join('<br>') || '请检查题号是否以「1.」或「一、」开头') + '</div>';
+      $('#imPreview').innerHTML = parsed.map(function (q, i) {
+        var ok = q.options.some(function (o) { return o.isCorrect; });
+        var tn = { single: '单选', multiple: '多选', judge: '判断' }[q.type] || q.type;
+        return '<div class="q" data-i="' + i + '">' +
+          '<div class="stem">' + (i + 1) + '. ' + esc(q.stem) + ' <span class="tag">' + tn + '</span>' +
+          (ok ? '' : ' <span class="badtag">未识别答案，点选项补</span>') + '</div>' +
+          q.options.map(function (o, oi) {
+            return '<div class="opt' + (o.isCorrect ? ' right' : '') + '" data-oi="' + oi + '" style="cursor:pointer">' +
+              esc(o.label) + '. ' + esc(o.content) + (o.isCorrect ? '  ✓' : '') + '</div>';
+          }).join('') +
+          (q.analysis ? '<div class="ana">' + esc(q.analysis) + '</div>' : '') +
+          '<div class="row-actions" style="margin-top:8px">' +
+            '<button class="btn ghost sm" data-rm="' + i + '">移除这题</button>' +
+          '</div></div>';
+      }).join('');
+      $('#imGo').disabled = parsed.length === 0;
+      $('#imGo').textContent = parsed.length ? ('导入 ' + parsed.length + ' 题') : '导入';
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll('#modal .m'), function (m) {
+      m.onclick = function () {
+        Array.prototype.forEach.call(document.querySelectorAll('#modal .m'), function (x) { x.classList.remove('on'); });
+        m.classList.add('on');
+        $('#panePaste').style.display = m.dataset.m === 'paste' ? 'block' : 'none';
+        $('#paneCsv').style.display = m.dataset.m === 'csv' ? 'block' : 'none';
+      };
+    });
+    $('#imTarget').onchange = function () {
+      $('#imNameWrap').style.display = this.value === 'new' ? 'block' : 'none';
+    };
+    $('#imCancel').onclick = closeModal;
+    $('#imSample').onclick = function () { $('#imText').value = SAMPLE; };
+    $('#imParse').onclick = function () {
+      var r = parsePasted($('#imText').value); parsed = r.questions; renderPreview(r.warnings);
+    };
+    $('#imParseCsv').onclick = function () {
+      var r = parseCsv($('#imCsv').value); parsed = r.questions; renderPreview(r.warnings);
+    };
+
+    // 预览交互：点选项改正确答案 / 移除某题
+    $('#imPreview').onclick = function (e) {
+      var qel = e.target.closest('.q');
+      var opt = e.target.closest('.opt');
+      if (qel && opt) {
+        var q = parsed[Number(qel.dataset.i)];
+        var oi = Number(opt.dataset.oi);
+        var was = q.options[oi].isCorrect;
+        if (q.type === 'single') q.options.forEach(function (o) { o.isCorrect = false; });
+        q.options[oi].isCorrect = !was;
+        renderPreview([]);
+        return;
+      }
+      var rm = e.target.closest('button[data-rm]');
+      if (rm) { parsed.splice(Number(rm.dataset.rm), 1); renderPreview([]); }
+    };
+
+    $('#imGo').onclick = function () {
+      if (!parsed.length) { toast('请先点「解析预览」'); return; }
+      var bad = parsed.filter(function (q) { return !q.options.some(function (o) { return o.isCorrect; }); });
+      if (bad.length) { toast('还有 ' + bad.length + ' 题没选正确答案'); return; }
+      var target = $('#imTarget').value;
+      var cats = $('#imCats').value.split(/[,，]/).map(function (s) { return s.trim(); }).filter(Boolean);
+      var p;
+      if (target === 'new') {
+        var name = $('#imName').value.trim();
+        if (!name) { toast('请填新题库名称'); return; }
+        p = api('/import', { method: 'POST', body: { name: name, categories: cats, questions: parsed, categoryId: Number($('#imCat').value) || null } });
+      } else {
+        p = api('/banks/' + target + '/questions/batch', { method: 'POST', body: { questions: parsed } });
+      }
+      $('#imGo').disabled = true;
+      p.then(function (d) {
+        closeModal();
+        toast('导入成功：' + (d.count != null ? d.count : parsed.length) + ' 题');
+        loadBanks(); loadDash();
+      }).catch(function (e) {
+        toast('导入失败：' + e.message); $('#imGo').disabled = false;
+      });
+    };
+  });
+
+  // 粘贴文本解析：识别「1. 题干 / A. 选项 / 答案：X / 解析：…」（与 C 端 import-parse.js 同规则）
+  var Q_START = /^(?:\s*(?:\d+|[一二三四五六七八九十百]+)[\.、．。)）]\s*|\s*第\s*[\d一二三四五六七八九十]+\s*题[．。、]?\s*)/;
+  var OPT_RE = /^\s*([A-Da-d])[\.、．)）]\s*(.+?)\s*$/;
+
+  function parsePasted(text) {
+    var warnings = [], questions = [];
+    var lines = String(text || '').replace(/\r\n/g, '\n').split('\n');
+    var blocks = [], cur = [], inBlock = false;
+    lines.forEach(function (line) {
+      if (Q_START.test(line)) {
+        if (cur.length) blocks.push(cur);
+        cur = [line]; inBlock = true;
+      } else if (inBlock) cur.push(line);
+    });
+    if (cur.length) blocks.push(cur);
+    if (!blocks.length) return { questions: questions, warnings: ['未识别到题目（题号需形如「1.」/「一、」/「第1题」）'] };
+
+    blocks.forEach(function (blk, idx) {
+      var opts = [], firstOpt = -1, lastOpt = -1;
+      blk.forEach(function (ln, i) {
+        var om = ln.match(OPT_RE);
+        if (om && i > 0) {
+          if (firstOpt < 0) firstOpt = i;
+          lastOpt = i;
+          opts.push({ label: om[1].toUpperCase(), content: om[2].trim(), isCorrect: false });
+        }
+      });
+      // 题干可能跨多行（PDF 复制常见）：取首行到第一个选项之间的全部内容
+      var stem = blk.slice(0, firstOpt > 0 ? firstOpt : blk.length).join('\n').replace(Q_START, '').trim();
+      // 选项之后的内容才是答案 + 解析
+      var tail = blk.slice(lastOpt > 0 ? lastOpt + 1 : 1).join('\n');
+      var ansM = tail.match(/(?:参考答案|正确答案|答案)[:：]?\s*([^\n，,。]+)/i) ||
+        tail.match(/答案为?\s*([A-Da-d对对错错正确错误√×]+)/i);
+      var anaM = tail.match(/(?:答案解析|解析)[:：]?\s*([\s\S]+)/i);
+      var ans = classifyAnswer(ansM ? ansM[1] : '');
+      var finalOpts = applyAnswer(opts, ans);
+
+      if (!stem) { warnings.push('第 ' + (idx + 1) + ' 题题干缺失，已跳过'); return; }
+      if (finalOpts.length < 2) { warnings.push('第 ' + (idx + 1) + ' 题选项不足 2 个，已跳过'); return; }
+      var noAns = !ans.correctLabels && ans.type !== 'judge';
+      if (noAns) {
+        // 答案没识别出来也保留，让管理员在预览里点选补上
+        warnings.push('第 ' + (idx + 1) + ' 题没找到答案，请在预览里点选正确选项');
+      }
+      questions.push({
+        type: ans.type, stem: stem,
+        analysis: anaM ? anaM[1].trim() : '',
+        options: finalOpts,
+      });
+    });
+    return { questions: questions, warnings: warnings };
+  }
+
+  function applyAnswer(opts, ans) {
+    if (!ans) return opts;
+    if (ans.type === 'judge') {
+      return opts.length >= 2
+        ? opts.map(function (o) { return { label: o.label, content: o.content, isCorrect: o.label.toUpperCase() === ans.correct }; })
+        : [{ label: 'A', content: '正确', isCorrect: ans.correct === 'A' },
+           { label: 'B', content: '错误', isCorrect: ans.correct === 'B' }];
+    }
+    var set = {};
+    (ans.correctLabels || []).forEach(function (l) { set[l] = 1; });
+    return opts.map(function (o) { return { label: o.label, content: o.content, isCorrect: !!set[o.label.toUpperCase()] }; });
+  }
+
+  // 简化 CSV 解析（支持引号内逗号）
+  function splitLine(line) {
+    var out = [], cur = '', inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var c = line[i];
+      if (inQ) {
+        if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; }
+        else cur += c;
+      } else if (c === '"') inQ = true;
+      else if (c === ',') { out.push(cur); cur = ''; }
+      else cur += c;
+    }
+    out.push(cur);
+    return out.map(function (s) { return s.trim(); });
+  }
+
+  function parseCsv(text) {
+    var warnings = [], questions = [];
+    var rows = String(text || '').replace(/^\uFEFF/, '').split(/\r?\n/).filter(function (l) { return l.trim(); })
+      .map(splitLine);
+    if (rows.length < 2) return { questions: questions, warnings: ['至少需要表头 + 1 行题目'] };
+
+    var head = rows[0];
+    var idx = { stem: -1, answer: -1, analysis: -1, opts: {} };
+    head.forEach(function (h, i) {
+      var n = String(h).toLowerCase();
+      if (idx.stem < 0 && /(题干|题目|stem|question)/.test(n)) idx.stem = i;
+      else if (idx.answer < 0 && /(答案|answer|正确选项)/.test(n)) idx.answer = i;
+      else if (idx.analysis < 0 && /(解析|analysis)/.test(n)) idx.analysis = i;
+      var m = n.match(/^(?:选项)?([a-d])$/);
+      if (m) idx.opts[m[1].toUpperCase()] = i;
+    });
+    if (idx.stem < 0) return { questions: questions, warnings: ['未找到「题干」列，表头需含 题干/题目'] };
+
+    var letters = Object.keys(idx.opts).sort();
+    for (var r = 1; r < rows.length; r++) {
+      var row = rows[r];
+      var stem = (row[idx.stem] || '').trim();
+      if (!stem) { warnings.push('第 ' + r + ' 行题干为空，已跳过'); continue; }
+      var opts = letters.map(function (L) {
+        return { label: L, content: (row[idx.opts[L]] || '').trim(), isCorrect: false };
+      }).filter(function (o) { return o.content; });
+      var ansRaw = idx.answer >= 0 ? (row[idx.answer] || '').trim() : '';
+      var ans = classifyAnswer(ansRaw);
+      if (ans.type === 'judge') {
+        opts = opts.length >= 2
+          ? opts.map(function (o) { return { label: o.label, content: o.content, isCorrect: o.label.toUpperCase() === ans.correct }; })
+          : [{ label: 'A', content: '正确', isCorrect: ans.correct === 'A' },
+             { label: 'B', content: '错误', isCorrect: ans.correct === 'B' }];
+      } else {
+        var set = {};
+        (ans.correctLabels || []).forEach(function (l) { set[l] = 1; });
+        opts = opts.map(function (o) { return { label: o.label, content: o.content, isCorrect: !!set[o.label.toUpperCase()] }; });
+      }
+      if (opts.length < 2) { warnings.push('第 ' + r + ' 行选项不足 2 个，已跳过'); continue; }
+      if (ans.type !== 'judge' && !(ans.correctLabels || []).length) {
+        warnings.push('第 ' + r + ' 行答案无法识别（' + (ansRaw || '空') + '），已跳过'); continue;
+      }
+      if (!opts.some(function (o) { return o.isCorrect; })) {
+        warnings.push('第 ' + r + ' 行答案与选项不匹配，已跳过'); continue;
+      }
+      questions.push({
+        type: ans.type, stem: stem,
+        analysis: idx.analysis >= 0 ? (row[idx.analysis] || '').trim() : '',
+        options: opts,
+      });
+    }
+    return { questions: questions, warnings: warnings };
+  }
+
+  function classifyAnswer(token) {
+    var t = String(token || '').trim();
+    if (/^(对|正确|对的|是|√)$/i.test(t)) return { type: 'judge', correct: 'A' };
+    if (/^(错|错误|错的|不对|否|×|✕)$/i.test(t)) return { type: 'judge', correct: 'B' };
+    var letters = (t.match(/[A-Da-d]/g) || []).map(function (s) { return s.toUpperCase(); });
+    var uniq = letters.filter(function (v, i) { return letters.indexOf(v) === i; });
+    if (uniq.length >= 2) return { type: 'multiple', correctLabels: uniq };
+    if (uniq.length === 1) return { type: 'single', correctLabels: uniq };
+    return { type: 'single', correctLabels: [] };
+  }
+
+  // ===== 启动 =====
+  if (token) { enterApp(); }
+})();
+</script>
+</body>
+</html>

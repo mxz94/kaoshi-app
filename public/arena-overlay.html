@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="H9LxP0KqfuAQb6m0nFYfhj">
+<head data-page-node-id="QepoPddXRvUohGnQ9oxkMs">
+<meta charset="UTF-8" data-page-node-id="mQNAjOZgwRJymdyYhbJeLg" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="H4wwBcmmfZlJ9fvx4ywsti" />
+<title>竞技场 · OBS 叠加层</title>
+<style>
+  :root{ --gold:#F59E0B; --ok:#16A34A; --bg:transparent; }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:transparent;font-family:"Noto Sans SC",system-ui,sans-serif;color:#fff;overflow:hidden}
+  #wrap{width:100%;max-width:720px;margin:0 auto;padding:12px}
+  #qbox{position:relative;background:rgba(15,17,21,.78);border:1px solid rgba(245,158,11,.5);border-radius:14px;padding:16px;backdrop-filter:blur(4px);overflow:visible}
+  #stem{font-size:22px;line-height:1.45;font-weight:600;margin-bottom:10px}
+  #opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .opt{background:rgba(26,29,36,.85);border:1px solid #2A2F3A;border-radius:10px;padding:10px;font-size:17px}
+  .opt b{color:var(--gold);margin-right:8px}
+  #bar{height:10px;background:rgba(0,0,0,.4);border-radius:6px;overflow:hidden;margin:12px 0}
+  #bar>i{display:block;height:100%;background:var(--gold);width:0%}
+  #meta{font-size:14px;opacity:.8;text-align:center}
+  #lb{margin-top:14px;background:rgba(15,17,21,.72);border-radius:14px;padding:12px 14px}
+  #lb h3{margin:0 0 8px;font-size:14px;color:var(--gold);letter-spacing:1px}
+  .li{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:18px}
+  .li .rk{width:28px;font-weight:800;color:var(--gold)}
+  .li .nm{flex:1}
+  .li .sc{font-weight:800;color:var(--ok)}
+  .empty{opacity:.5;font-size:14px;text-align:center;padding:20px}
+  .reveal{margin-top:8px;font-size:15px;color:var(--ok);text-align:center}
+  .dist{display:flex;gap:10px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+  .dist span{font-size:14px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:3px 9px}
+  .dist b{color:var(--gold);margin-right:4px}
+
+  /* 选项占比（带百分比） */
+  #dist{display:none;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+  .ditem{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:4px 10px;font-size:14px}
+  .dletter{display:inline-block;min-width:22px;text-align:center;border-radius:5px;font-weight:800;color:#0b0d10;padding:1px 6px}
+  .dcount{font-weight:700}
+  .dbar{width:64px;height:6px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden}
+  .dbar>i{display:block;height:100%}
+  .dpct{opacity:.85;min-width:36px;text-align:right}
+
+  /* 右下角弹幕层 */
+  #danmu{position:absolute;right:10px;bottom:10px;width:48%;max-height:66%;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;pointer-events:none;z-index:6;overflow:hidden}
+  .dm{background:rgba(15,17,21,.74);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:4px 9px;font-size:14px;color:#fff;align-self:flex-end;max-width:100%;white-space:nowrap;opacity:.96;backdrop-filter:blur(2px);animation:dmIn .35s ease-out}
+  .dm.out{opacity:0;transform:translateY(-8px);transition:opacity .6s, transform .6s}
+  .dmnm{color:#FFD27A;font-weight:600;margin-right:4px}
+  .dmchip{display:inline-block;min-width:20px;text-align:center;border-radius:5px;padding:1px 6px;font-weight:800;color:#0b0d10}
+  @keyframes dmIn{from{opacity:0;transform:translateY(10px)} to{opacity:.96;transform:translateY(0)}}
+</style>
+</head>
+<body data-page-node-id="8MwW3UYF7utCU60U2ajFzh">
+<div id="wrap" data-page-node-id="WwaeBnV6HQEAUxilJpobdQ">
+  <div id="qbox" data-page-node-id="UfZkzl0WjDDxx6BtMz3GBi">
+    <div id="stem" data-page-node-id="6r32bpvXb34PWlvpNEB0Qd">等待主播推题…</div>
+    <div id="opts" data-page-node-id="bKcHc71zIoVTGvvrE6Q7EX"></div>
+    <div id="bar" data-page-node-id="jHdW8zFyg09YgSeVxnmJwU"><i data-page-node-id="qsGkAuaZMk2NLrbTSi435u"></i></div>
+    <div id="meta" data-page-node-id="dydltnoSiiaRbbgakGXduV"></div>
+    <div id="reveal" data-page-node-id="ngNebBbFccrNaTPqmwIZju"></div>
+    <div id="dist" data-page-node-id="LLnCtAEX4C8WjQhhzkZ4e7"></div>
+    <div id="danmu" data-page-node-id="sUkhA5TOS6VQxPYY57fGW8"></div>
+  </div>
+  <div id="lb" data-page-node-id="u2o40woesnnK5rjCq5wCeL">
+    <h3 data-page-node-id="YjBHJNVfBmf8kV4cCNiWRI">🏆 实时排行榜</h3>
+    <div id="list" data-page-node-id="LlKg1lnyWLSjHvk9pT6T8b"><div class="empty" data-page-node-id="DDAgcPuc9cAgb2EQQsX450">暂无参与</div></div>
+  </div>
+</div>
+<script>
+const roomId = new URLSearchParams(location.search).get('roomId') || 'default';
+const viewer = new URLSearchParams(location.search).get('viewer') || 'viewer'; // 主播传 viewer=host 始终可见弹幕
+const api = (p) => fetch('/api/arena'+p).then(r=>r.json());
+
+const OPT_COLORS = { A:'#3B82F6', B:'#22C55E', C:'#F59E0B', D:'#EF4444' };
+const optColor = (l) => OPT_COLORS[l] || '#888';
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+let showOthers = false;
+const danmu = document.getElementById('danmu');
+
+// —— SSE 实时弹幕 ——
+const es = new EventSource('/api/arena/stream?roomId='+encodeURIComponent(roomId)+'&viewer='+encodeURIComponent(viewer));
+es.addEventListener('answer', (e) => {
+  try { addDanmu(JSON.parse(e.data)); } catch (_) {}
+});
+es.addEventListener('question', () => { danmu.innerHTML = ''; });
+
+function addDanmu(d){
+  // 观众视角仅在「允许看他人答案」时显示；主播视角始终显示
+  if(!(viewer === 'host' || showOthers)) return;
+  const el = document.createElement('div');
+  el.className = 'dm';
+  el.innerHTML = `<span class="dmnm">${esc(d.username)}</span> 选了 <span class="dmchip" style="background:${optColor(d.option)}">${esc(d.option)}</span>`;
+  danmu.appendChild(el);
+  while(danmu.children.length > 14) danmu.firstChild.remove();
+  setTimeout(() => el.classList.add('out'), 3600);
+  setTimeout(() => el.remove(), 4200);
+}
+
+async function tick(){
+  const st = await api('/state?roomId='+encodeURIComponent(roomId));
+  const stem = document.getElementById('stem');
+  const opts = document.getElementById('opts');
+  const bar = document.querySelector('#bar>i');
+  const meta = document.getElementById('meta');
+  const reveal = document.getElementById('reveal');
+  const list = document.getElementById('list');
+  const dist = document.getElementById('dist');
+
+  showOthers = !!(st.showOthers);
+
+  if(st.question){
+    stem.textContent = st.question.stem;
+    opts.innerHTML = st.question.options.map(o=>`<div class="opt"><b>${o.label}</b>${esc(o.content)}</div>`).join('');
+    const remain = Math.max(0, st.question.endsAt - st.now);
+    const pct = Math.round(100*remain/(st.question.durationSec*1000));
+    bar.style.width = pct+'%';
+    meta.textContent = `第 ${st.roundNo} 题 · 剩余 ${Math.ceil(remain/1000)}s · ${st.participants} 人在线 · ${st.answeredCount||0} 人已答`;
+    let rhtml = st.reveal ? `✅ 正确答案：${st.reveal.correctLabels.join(',')}` : '';
+    reveal.innerHTML = rhtml;
+
+    // 选项占比（带百分比）
+    if(st.answerDist && st.answeredCount){
+      const total = st.answeredCount;
+      dist.innerHTML = st.question.options.map(o=>{
+        const c = st.answerDist[o.label] || 0;
+        const p = Math.round(100*c/total);
+        return `<div class="ditem"><span class="dletter" style="background:${optColor(o.label)}">${o.label}</span>`
+          + `<span class="dcount">${c}人</span>`
+          + `<span class="dbar"><i style="width:${p}%;background:${optColor(o.label)}"></i></span>`
+          + `<span class="dpct">${p}%</span></div>`;
+      }).join('');
+      dist.style.display = 'flex';
+    } else {
+      dist.style.display = 'none'; dist.innerHTML = '';
+    }
+  } else {
+    stem.textContent = '等待主播推题…';
+    opts.innerHTML=''; bar.style.width='0%'; meta.textContent=''; reveal.innerHTML='';
+    dist.style.display='none'; dist.innerHTML='';
+  }
+  list.innerHTML = (st.leaderboard&&st.leaderboard.length)
+    ? st.leaderboard.map(p=>`<div class="li"><span class="rk">${p.rank}</span><span class="nm">${esc(p.username)}</span><span class="sc">${p.score}</span></div>`).join('')
+    : '<div class="empty">暂无参与</div>';
+}
+setInterval(tick, 1000); tick();
+</script>
+</body>
+</html>

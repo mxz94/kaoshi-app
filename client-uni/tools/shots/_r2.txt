@@ -1,0 +1,2 @@
+terms | len=395 | 首行=用户协议 | 含服务内容=True | 含收集信息=False | err=none
+privacy | len=462 | 首行=隐私政策 | 含服务内容=False | 含收集信息=True | err=none
